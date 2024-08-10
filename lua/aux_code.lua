@@ -9,7 +9,14 @@ local AuxFilter = {}
 
 function AuxFilter.init(env)
     -- log.info("** AuxCode filter", env.name_space)
+    local config = env.engine.schema.config
+    local opt = {}
+    opt.phrase = config:get_bool('aux_code/phrase')
+    opt.filter = config:get_bool('aux_code/filter')
+    if opt.phrase == nil then opt.phrase = true end
+    if opt.filter == nil then opt.filter = true end
 
+    AuxFilter.opt = opt
     AuxFilter.aux_code, AuxFilter.code_map = AuxFilter.readAuxTxt(env.name_space)
 end
 
@@ -33,18 +40,22 @@ function AuxFilter.readAuxTxt(txtpath)
         line = line:match("[^\r\n]+") -- 去掉換行符，不然 value 是帶著 \n 的
         local code, seq, ch = line:match("([a-z]+),([0-9]+)=(.+)")
         if code and seq and ch then
-            seq = tonumber(seq)
-            if code:len() >= 3 and code:len() <= 4 then
-                local i = code:sub(3, 3)
-                if not auxCodes[ch] then
-                    auxCodes[ch] = ''
+            if AuxFilter.opt.filter then
+                if code:len() >= 3 and code:len() <= 4 then
+                    local i = code:sub(3, 3)
+                    if not auxCodes[ch] then
+                        auxCodes[ch] = ''
+                    end
+                    auxCodes[ch] = auxCodes[ch] .. i
                 end
-                auxCodes[ch] = auxCodes[ch] .. i
             end
-            if not codeMap[code] then
-                codeMap[code] = {}
+            if AuxFilter.opt.phrase then
+                if not codeMap[code] then
+                    codeMap[code] = {}
+                end
+                seq = tonumber(seq)
+                codeMap[code][seq] = ch
             end
-            codeMap[code][seq] = ch
         end
     end
     file:close()
@@ -65,7 +76,7 @@ function AuxFilter.func(input, env)
     local phraseMap = AuxFilter.code_map[inputCode]
 
     -- 处理 "自定义短语"
-    if phraseMap then
+    if AuxFilter.opt.phrase and phraseMap then
         local keys = {}
         for i in pairs(phraseMap) do
             table.insert(keys, i)
@@ -94,7 +105,9 @@ function AuxFilter.func(input, env)
     end
 
     -- 输入长度为大于4且小于10的奇数时 (对应2-4字词语), 进行辅助码筛选.
-    if not (#inputCode > 4 and #inputCode < 10 and #inputCode % 2 == 1) then
+    if AuxFilter.opt.filter and (
+        not (#inputCode > 4 and #inputCode < 10 and #inputCode % 2 == 1)
+        ) then
         -- 直接yield所有待选项，不进入后续迭代，提升性能
         for cand in input:iter() do
             yield(cand)

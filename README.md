@@ -14,8 +14,6 @@
 
 ![直接辅助码](pic/辅助码.png)
 
-- 这2个功能都是强制生效的; 如果不需要的话, 可以直接修改代码, 将对应分支的条件更改一下就行.
-
 - 由于版权因素, 本仓库并不提供 "自定义短语" 文件.
 
 ### [double_pinyin_flypy.custom.yaml](double_pinyin_flypy.custom.yaml)
@@ -26,6 +24,8 @@
 ```yaml
   # 需要放在 simplifier filter 之后
   engine/filters/@after 0: lua_filter@*aux_code@all-utf8.ini
+  #aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
+  #aux_code/filter: false  # 取消注释来禁用辅助码筛词
 ```
 
 ### [default.custom.yaml](default.custom.yaml)
