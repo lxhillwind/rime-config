@@ -40,6 +40,25 @@
 - `编码,序号=字词` 格式的 "自定义短语" (不满足这个格式的行会被忽略);
 - 当然, 你可以将其改成其他文件名; 只要在方案中引用此插件时进行对应修改即可.
 
+### single.txt
+- rime 格式的自定义短语 (用于以词库的方式实现固定编码; 可能它性能更好?);
+    - 相比上述 lua 实现的 "自定义短语" 的缺点: 如果字词次序有空洞, 候选位置无法保证;
+    - 文件头示例:
+
+```yaml
+# single.txt
+# encoding: utf-8
+# generated from ./lua/all-utf8.ini;
+# 3rd column: 100 - seq
+---
+name: single
+version: '2024-08-10'
+sort: by_weight
+...
+
+```
+
 ## 致谢
 
 - <https://github.com/HowcanoeWang/rime-lua-aux-code> RIME输入法辅助码音形分离插件; 本仓库的 lua 代码改动自此.
+- <https://ksqsf.moe/posts/2023-06-01-rime-double-pinyin/> 同时启用 script / table 翻译器并保留造词功能; [lua/top_translator.lua](lua/top_translator.lua) 文件复制自此.
