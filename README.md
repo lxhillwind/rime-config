@@ -16,6 +16,12 @@
 
 - 由于版权因素, 本仓库并不提供 "自定义短语" 文件.
 
+### [lua/top_translator.lua](lua/top_translator.lua)
+- 复制自 <https://ksqsf.moe/posts/2023-06-01-rime-double-pinyin/>; 用于处理混用 table_translator 和 script_translator 时的造词问题.
+
+### [double_pinyin_flypy.schema.yaml](double_pinyin_flypy.schema.yaml)
+- 来自 <https://github.com/rime/rime-double-pinyin> 仓库;
+
 ### [double_pinyin_flypy.custom.yaml](double_pinyin_flypy.custom.yaml)
 - 个人配置, 其中包含了上述 lua 插件的使用说明;
 
@@ -32,9 +38,6 @@
 - 个人配置.
 
 ## 本仓库未包含的文件
-
-### double_pinyin_flypy.schema.yaml
-- 来自 <https://github.com/rime/rime-double-pinyin> 仓库;
 
 ### lua/all-utf8.ini
 - `编码,序号=字词` 格式的 "自定义短语" (不满足这个格式的行会被忽略);
