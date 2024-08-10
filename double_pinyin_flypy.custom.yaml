@@ -1,0 +1,12 @@
+patch:
+  engine/filters/@after 0: lua_filter@*aux_code@all-utf8.ini
+  translator/preedit_format: []  # 避免转换预编辑到全拼
+  ascii_composer/switch_key/Shift_L: commit_code
+  ascii_composer/switch_key/Shift_R: commit_code
+  speller/algebra/@next: abbrev/^(.).+$/$1/  # 超级简拼
+  key_binder/bindings/+:
+    - { when: has_menu, accept: semicolon, send: 2 }  # 次选
+    - { when: has_menu, accept: bracketleft, send: Page_Up }
+    - { when: has_menu, accept: bracketright, send: Page_Down }
+    - { when: has_menu, accept: Control+BackSpace, send: Escape }  # 清屏
+    - { when: has_menu, accept: Control+1, send: Shift+Delete }  # 删除当前候选词
