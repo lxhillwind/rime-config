@@ -2,6 +2,7 @@ patch:
   # 使用小鹤的简体字码表;
   # 通过在 flypy_simp.dict.yaml 中使用 "简化字八股文" (./essay-zh-hans.txt)
   # (https://github.com/rime/rime-essay-simp), 让其可以有较大的预置词库.
+  # {{{
   flypy:
     dictionary: flypy_simp
     prism: flypy_simp
@@ -15,5 +16,40 @@ patch:
   # Tab 来进入输入辅助码的流程;
   # (Right 定位, _ 引导辅助码; flypy_simp.dict.yaml 中使用 _ 作为音形码的分隔符).
   key_binder/bindings/@next: { when: has_menu, accept: Tab, send_sequence: '{Right}{Right}{Right}_' }
+  # }}}
 
-  __include: common.yaml:/patch
+  engine/filters/@after 0: lua_filter@*aux_code@all-utf8.ini
+  #aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
+  #aux_code/filter: false  # 取消注释来禁用辅助码筛词
+
+  engine/translators:
+    - punct_translator
+    - reverse_lookup_translator
+    # 在 top_translator 中按情况开启 table_translator / script_translator,
+    # 让造词功能总是可用.
+    # 如果想测试只有 table_translator 或者只有 script_translator 的情况,
+    # 可以注视掉 lua_translator 这一行, 并按需启用另外的行.
+    - lua_translator@*top_translator
+    # - table_translator@single
+    # - script_translator@flypy
+
+  # 使用词库来替换 lua 插件实现的自定义短语;
+  # {{{
+  aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
+  single: # custom_phrase; used in top_translator
+    dictionary: ''
+    user_dict: single
+    db_class: stabledb
+    initial_quality: 100
+    enable_completion: false
+    enable_sentence: false
+  # }}}
+
+  ascii_composer/switch_key/Shift_L: commit_code
+  ascii_composer/switch_key/Shift_R: commit_code
+  key_binder/bindings/+:
+    - { when: has_menu, accept: semicolon, send: 2 }  # 次选
+    - { when: has_menu, accept: bracketleft, send: Page_Up }
+    - { when: has_menu, accept: bracketright, send: Page_Down }
+    - { when: has_menu, accept: Control+BackSpace, send: Escape }  # 清屏
+    - { when: has_menu, accept: Control+1, send: Shift+Delete }  # 删除当前候选词
