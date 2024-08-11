@@ -13,9 +13,6 @@ patch:
   speller/algebra:
     - derive/^(..).*$/$1/
     - abbrev/^(.).*$/$1/  # 超级简拼
-  # Tab 来进入输入辅助码的流程;
-  # (Right 定位, _ 引导辅助码; flypy_simp.dict.yaml 中使用 _ 作为音形码的分隔符).
-  key_binder/bindings/@next: { when: has_menu, accept: Tab, send_sequence: '{Right}{Right}{Right}_' }
   # }}}
 
   engine/filters/@after 0: lua_filter@*aux_code@all-utf8.ini
@@ -53,3 +50,11 @@ patch:
     - { when: has_menu, accept: bracketright, send: Page_Down }
     - { when: has_menu, accept: Control+BackSpace, send: Escape }  # 清屏
     - { when: has_menu, accept: Control+1, send: Shift+Delete }  # 删除当前候选词
+    - { when: has_menu, accept: \, send: Shift+Delete }  # 方便在手机上输入
+
+    # flypy_simp 方案覆盖的按键:
+    # Tab 来进入输入辅助码的流程;
+    # (Right 定位, _ 引导辅助码; flypy_simp.dict.yaml 中使用 _ 作为音形码的分隔符).
+    - { when: has_menu, accept: Tab, send_sequence: '{Right}{Right}{Right}_' }
+    # /: 方便在手机上输入
+    - { when: has_menu, accept: /, send_sequence: '{Right}{Right}{Right}_' }
