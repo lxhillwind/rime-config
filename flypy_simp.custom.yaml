@@ -11,9 +11,7 @@ patch:
   speller/alphabet: zyxwvutsrqponmlkjihgfedcba_
   speller/algebra:
     - derive/^(..).*$/$1/
-    # 超级简拼开启之后, 单字几乎无法出现在靠前的候选位置;
-    # 不过我们主要使用 table_translator 来输入单字, 不受这个影响.
-    - derive/^(.).*$/$1/  # 超级简拼
+    - abbrev/^(.).*$/$1/  # 超级简拼
   # Tab 来进入输入辅助码的流程;
   # (Right 定位, _ 引导辅助码; flypy_simp.dict.yaml 中使用 _ 作为音形码的分隔符).
   key_binder/bindings/@next: { when: has_menu, accept: Tab, send_sequence: '{Right}{Right}{Right}_' }

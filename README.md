@@ -24,15 +24,17 @@
 
 ### [double_pinyin_flypy.schema.yaml](double_pinyin_flypy.schema.yaml)
 - 来自 <https://github.com/rime/rime-double-pinyin> 仓库.
+- 使用 luna_pinyin 的词库.
 
 ### [double_pinyin_flypy.custom.yaml](double_pinyin_flypy.custom.yaml)
-- 适合在在手机上使用 (组词的时候单字会排在前边)
+- 微调.
 
 ### [flypy_simp.schema.yaml](flypy_simp.schema.yaml)
 - 类似 double_pinyin_flypy.schema.yaml, 微调了 /schema 的定义; 主要是为了引出新的方案.
 
 ### [flypy_simp.custom.yaml](flypy_simp.custom.yaml)
-- 适合在电脑上使用 (Tab 键引导使用形码组词)
+- 辅助码作为音节的一部分, 参与组词; 使用自定义的词库, 依赖 "简化字八股文".
+- Tab 键引导使用形码组词.
 
 ### [common.yaml](common.yaml)
 - 配置的依赖, 其中包含了上述 lua 插件的使用说明;
