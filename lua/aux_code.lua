@@ -131,6 +131,13 @@ function AuxFilter.func(input, env)
                 yield(cand)
             end
         end
+        if check then
+            -- 候选项只有全匹配单字的话, 会进入这个分支.
+            check = false
+            for _, i in ipairs(candSingle) do
+                yield(i)
+            end
+        end
 
         return
     end
