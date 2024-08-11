@@ -3,12 +3,20 @@ patch:
   #aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
   #aux_code/filter: false  # 取消注释来禁用辅助码筛词
 
-  # 使用词库来替换 lua 插件实现的自定义短语 {{{
-  aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
   engine/translators:
     - punct_translator
     - reverse_lookup_translator
+    # 在 top_translator 中按情况开启 table_translator / script_translator,
+    # 让造词功能总是可用.
+    # 如果想测试只有 table_translator 或者只有 script_translator 的情况,
+    # 可以注视掉 lua_translator 这一行, 并按需启用另外的行.
     - lua_translator@*top_translator
+    # - table_translator@single
+    # - script_translator@flypy
+
+  # 使用词库来替换 lua 插件实现的自定义短语;
+  # {{{
+  aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
   single: # custom_phrase; used in top_translator
     dictionary: ''
     user_dict: single
@@ -16,25 +24,39 @@ patch:
     initial_quality: 100
     enable_completion: false
     enable_sentence: false
+  # }}}
 
-  flypy: # copied from double_pinyin_flypy.schema.yaml; used in top_translator
-    dictionary: luna_pinyin
-    prism: double_pinyin_flypy
-  speller/algebra/@next: abbrev/^(.).+$/$1/  # 超级简拼
-  translator/preedit_format: []  # 避免转换预编辑到全拼
+  # 如下 2 个 script_translator 需要仅启用其中一个.
 
-  # 与上方的 flypy 二选一; 上方的是使用 luna_pinyin; 这里的是使用小鹤的码表.
-  # TODO: 是否可以使用现成的词库?
-  # flypy:
-  #   dictionary: flypy_simp
-  #   prism: flypy_simp
-  # translator: # 如果不指定这个, 就无法生成 dict.
-  #   dictionary: flypy_simp
-  #   prism: flypy_simp
-  # speller/algebra:
-  #   - derive/^(..).*$/$1/
-  #   - derive/^(.).*$/$1/
+  # script_translator: 使用 rime 官方的双拼方案;
+  # 优势: 组词的时候单字优先, 更适合于手机上?
+  # {{{
+  # flypy: # copied from double_pinyin_flypy.schema.yaml; used in top_translator
+  #   dictionary: luna_pinyin
+  #   prism: double_pinyin_flypy
+  # speller/algebra/@next: abbrev/^(.).+$/$1/  # 超级简拼
+  # translator/preedit_format: []  # 避免转换预编辑到全拼
+  # }}}
 
+  # script_translator: 使用小鹤的简体字码表;
+  # 通过在 flypy_simp.dict.yaml 中使用 "简化字八股文" (./essay-zh-hans.txt)
+  # (https://github.com/rime/rime-essay-simp), 让其可以有较大的预置词库.
+  # {{{
+  flypy:
+    dictionary: flypy_simp
+    prism: flypy_simp
+  translator: # 如果不指定这个, 就无法生成 dict.
+    dictionary: flypy_simp
+    prism: flypy_simp
+  speller/alphabet: zyxwvutsrqponmlkjihgfedcba_
+  speller/algebra:
+    - derive/^(..).*$/$1/
+    # 超级简拼开启之后, 单字几乎无法出现在靠前的候选位置;
+    # 不过我们主要使用 table_translator 来输入单字, 不受这个影响.
+    - derive/^(.).*$/$1/  # 超级简拼
+  # Tab 来进入输入辅助码的流程;
+  # (Right 定位, _ 引导辅助码; flypy_simp.dict.yaml 中使用 _ 作为音形码的分隔符).
+  key_binder/bindings/@next: { when: has_menu, accept: Tab, send_sequence: '{Right}{Right}{Right}_' }
   # }}}
 
   ascii_composer/switch_key/Shift_L: commit_code

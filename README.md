@@ -37,6 +37,12 @@
 ### [default.custom.yaml](default.custom.yaml)
 - 个人配置.
 
+### [essay-zh-hans.txt](essay-zh-hans.txt)
+
+"简化字八股文" <https://github.com/rime/rime-essay-simp>;
+
+在 flypy_simp.dict.yaml 中用到.
+
 ## 本仓库未包含的文件
 
 ### lua/all-utf8.ini
@@ -60,6 +66,40 @@ sort: by_weight
 ...
 
 ```
+
+### flypy_simp.dict.yaml
+
+- 替代 luna_pinyin 的词库 (全拼); 便于使用音形码来构建词语.
+- 参考 [./double_pinyin_flypy.custom.yaml](./double_pinyin_flypy.custom.yaml) 中 flypy_simp 的部分.
+- 文件头示例:
+
+```yaml
+# Rime dictionary
+# encoding: utf-8
+---
+name: flypy_simp
+version: "2024.08.11"
+sort: by_weight
+use_preset_vocabulary: true
+vocabulary: essay-zh-hans
+...
+
+# generated from ./lua/all-utf8.ini;
+# 仅保留码长为 3-4 的字; 它们包含了所有的 1 / 2简码;
+# 注意已经排好顺序了 (部分1 / 2简码在3简码中会从 3 / 4 位开始);
+#
+# 1 / 2 简码无法在组词的时候发挥作用 (超级简拼会让词语优先显示);
+# 可能可以靠 lua filter 来调整?
+# 无论如何, 暂时去掉它们, 让词典构建的运算量少一点也是好的.
+#
+# 将 _ 作为双拼音节和辅助码的分隔符; 方案的 speller 需要相应调整.
+阿	aa_e
+锕	aa_j
+嗄	aa_k
+吖	aa_k
+啊	aa_k
+```
+
 
 ## 致谢
 
