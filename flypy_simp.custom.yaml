@@ -12,6 +12,10 @@ patch:
   speller/alphabet: zyxwvutsrqponmlkjihgfedcba_
   speller/algebra:
     - derive/^(..).*$/$1/
+    # 如果无法使用 lua 功能, 可以启用下边这一行, 并启用 script_translator@flypy;
+    # 这样就能免输入引导字符直接使用辅助码了 (支持字和词组);
+    # 不过单字次序无法固定.
+    # - derive/^(..)_(.*)$/$1$2/  # 朴素的直接辅助码
     - abbrev/^(.).*$/$1/  # 超级简拼
   # }}}
 
