@@ -1,0 +1,14 @@
+__include: double_pinyin_flypy.schema.yaml:/
+
+schema:
+  schema_id: flypy_simp
+  name: 鹤形
+  version: "0.1"
+  author:
+    - double pinyin layout by 鶴
+    - Rime schema by 佛振 <chen.sst@gmail.com>
+    - 音形方案整合 by lxhillwind
+  description: |
+    鹤形+双拼。
+  dependencies:
+    - stroke

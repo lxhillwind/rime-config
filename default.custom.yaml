@@ -1,3 +1,4 @@
 patch:
   schema_list:
     - schema: double_pinyin_flypy
+    - schema: flypy_simp
