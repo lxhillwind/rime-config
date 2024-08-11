@@ -144,7 +144,16 @@ function AuxFilter.func(input, env)
         local hasMatched = false
         for cand in input:iter() do
             local found = false
-            local testThis = cand._end + 1 == #inputCode and utf8.len(cand.text) * 2 + 1 == #inputCode
+            local testThis = cand.start == 0 and (
+            -- 最后一位是前边的辅助码, 或者是最后一个字的辅助码 (参与组词);
+            -- 例如, vi'dc'u -> 知道u (x+1=y) / vi'dcz -> 知道 (x=y);
+            -- 后者的情况只适用于 script_translator 包含超过2位的情况,
+            -- 即使用音形码 (辅助码) 作为音节元素.
+            --
+            -- 如果是一般的 script_translator (双拼), 应为每2个音节构成一个字,
+            -- 即最后一位可能是前边任何一个字的辅助码; 这时只检查 x+1=y 即可.
+            cand._end + 1 == #inputCode or cand._end == #inputCode
+            ) and utf8.len(cand.text) * 2 + 1 == #inputCode
 
             for _, codePoint in utf8.codes(cand.text) do
                 if testThis and not found then
