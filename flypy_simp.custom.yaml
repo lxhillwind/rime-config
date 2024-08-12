@@ -12,12 +12,8 @@ patch:
   speller/alphabet: zyxwvutsrqponmlkjihgfedcba_
   speller/algebra:
     - derive/^(..).*$/$1/
-    # 如果无法使用 lua 功能, 可以启用下边这一行, 并启用 script_translator@flypy;
-    # 这样就能免输入引导字符直接使用辅助码了 (支持字和词组);
-    # 如果想确定单字次序, 还需要启用 table_translator@single_not_3_4.
-    #
-    # 想要组词的话, 需要注意最后一个字要通过 Tab 引导来进入 script_translator;
-    # 否则无法记住词汇.
+    # 取消注释这一行, 就能免输入引导字符直接使用辅助码了 (支持字和词组);
+    # 这个与下方 lua_filter@*aux_code 是互斥的: 只能启用一个.
     # - derive/^(..)_(.*)$/$1$2/  # 朴素的直接辅助码
     - abbrev/^(.).*$/$1/  # 超级简拼
   # }}}
@@ -34,17 +30,8 @@ patch:
     # 如果想测试只有 table_translator 或者只有 script_translator 的情况,
     # 可以注视掉 lua_translator 这一行, 并按需启用另外的行.
     - lua_translator@*top_translator
-    # - table_translator@single  # 这一行不论如何都不该启用; 除非要单独调试它.
-    # - table_translator@single_not_3_4
+    # - table_translator@single
     # - script_translator@flypy
-
-  single_not_3_4:
-    dictionary: ''
-    user_dict: single_not_3_4
-    db_class: stabledb
-    initial_quality: 100
-    enable_completion: false
-    enable_sentence: false
 
   # 使用词库来替换 lua 插件实现的自定义短语;
   # {{{

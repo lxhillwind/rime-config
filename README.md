@@ -124,29 +124,6 @@ vocabulary: essay-zh-hans
 啊	aa_k
 ```
 
-### single_not_3_4.txt
-- rime 格式的自定义短语;
-- 当 lua 不可用时, 可以启用这个, 固定码长不为 3 / 4 的单字的候选位置;
-- 文件头示例:
-
-```yaml
-# single_not_3_4.txt
-# encoding: utf-8
-# generated from ./lua/all-utf8.ini;
-# 3rd column: 100 - seq
-# 去掉了码长为 3 / 4 的字.
----
-name: single_not_3_4
-version: '2024-08-10'
-sort: by_weight
-...
-
-啊	a	99
-按	a	98
-啊	aa	99
-阿	aa	98
-```
-
 ## 致谢
 
 - <https://github.com/HowcanoeWang/rime-lua-aux-code> RIME输入法辅助码音形分离插件; 本仓库的 lua 代码改动自此.
