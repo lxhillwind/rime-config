@@ -58,19 +58,22 @@ patch:
     enable_sentence: false
   # }}}
 
+  recognizer/patterns/reverse_lookup:  # 关闭反查 (` 键)
+
   ascii_composer/switch_key/Shift_L: commit_code
   ascii_composer/switch_key/Shift_R: commit_code
   key_binder/bindings/+:
     - { when: has_menu, accept: semicolon, send: 2 }  # 次选
     - { when: has_menu, accept: bracketleft, send: Page_Up }
     - { when: has_menu, accept: bracketright, send: Page_Down }
-    - { when: has_menu, accept: Control+BackSpace, send: Escape }  # 清屏
+    - { when: composing, accept: Control+BackSpace, send: Escape }  # 清屏
     - { when: has_menu, accept: Control+1, send: Shift+Delete }  # 删除当前候选词
     - { when: has_menu, accept: \, send: Shift+Delete }  # 方便在手机上输入
 
     # flypy_simp 方案覆盖的按键:
     # Tab 来进入输入辅助码的流程;
-    # (Right 定位, _ 引导辅助码; flypy_simp.dict.yaml 中使用 _ 作为音形码的分隔符).
-    - { when: has_menu, accept: Tab, send_sequence: '{Right}{Right}{Right}_' }
+    # (Shift+Right 定位, _ 引导辅助码; flypy_simp.dict.yaml 中使用 _ 作为音形码的分隔符).
+    # 直接使用 Right 键的话, 可能在 linear layout 中不生效.
+    - { when: has_menu, accept: Tab, send_sequence: '{Shift+Right}_' }
     # /: 方便在手机上输入
-    - { when: has_menu, accept: /, send_sequence: '{Right}{Right}{Right}_' }
+    - { when: has_menu, accept: /, send_sequence: '{Shift+Right}_' }

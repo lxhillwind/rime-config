@@ -12,3 +12,15 @@ schema:
     鹤形+双拼。
   dependencies:
     - stroke
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 西文 ]
+  - name: full_shape
+    states: [ 半角, 全角 ]
+  # 本方案只支持简体.
+  # - name: simplification
+  #   states: [ 漢字, 汉字 ]
+  - name: ascii_punct
+    states: [ 。，, ．， ]
