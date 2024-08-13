@@ -1,0 +1,30 @@
+patch:
+  style/horizontal: true
+  style/inline_preedit: true
+  style/layout/margin_x: 3
+  style/layout/margin_y: 3
+  style/font_point: 16
+
+  style/color_scheme: Alpha-white
+
+  preset_color_schemes:
+    Alpha-white:
+      name: Alpha-white
+      author: 爱散步的小鸟 (搜狗皮肤——Alpha)
+      text_color: 0x4c4c4c
+      back_color: 0xffffff
+      border_color: 0xffffff
+      hilited_text_color: 0x3c3c3c
+      hilited_back_color: 0xffffff
+      hilited_candidate_text_color: 0xe58200
+      hilited_candidate_back_color: 0xffffff
+    Alpha-black:
+      name: Alpha-black
+      author: 爱散步的小鸟 (搜狗皮肤——Alpha)
+      text_color: 0xf5f5f5
+      back_color: 0x000000
+      border_color: 0x000000
+      hilited_text_color: 0xdadada
+      hilited_back_color: 0x000000
+      hilited_candidate_text_color: 0xe58200
+      hilited_candidate_back_color: 0x000000
