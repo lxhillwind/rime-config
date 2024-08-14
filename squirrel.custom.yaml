@@ -1,14 +1,12 @@
-# weasel.custom.yaml
+# squirrel.custom.yaml
 patch:
+  app_options/org.vim.MacVim: { vim_mode: true }  # 仅去掉默认的 ascii_mode: true
+
   style/+:
-    horizontal: true
-    inline_preedit: true
-    font_point: 16
+    candidate_list_layout: linear  # 使用横排候选.
+    font_point: 20
     color_scheme: Alpha-white
-  style/layout/+:
-    margin_x: 3
-    margin_y: 3
-    border_width: 1
+    color_scheme_dark: Alpha-black
 
   preset_color_schemes/+:
     Alpha-white:

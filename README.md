@@ -37,7 +37,8 @@
 
 ```yaml
   # 需要放在 simplifier filter 之后
-  engine/filters/@after 0: lua_filter@*aux_code@all-utf8.ini
+  engine/filters/@after 0: lua_filter@*aux_code
+  aux_code/file: aux-chars-34.ini
   #aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
   #aux_code/filter: false  # 取消注释来禁用辅助码筛词
 ```
@@ -66,6 +67,10 @@ aak,1=嗄
 aak,2=吖
 aak,3=啊
 ```
+
+### lua/aux-chars-34.ini
+- lua/all-utf8.ini 的缩减版 (仅包含码长为 3-4 的部分);
+- 在 Windows 平台上可能加载速度提升比较明显.
 
 ### single.txt
 - rime 格式的自定义短语 (用于以词库的方式实现固定编码; 可能它性能更好?);

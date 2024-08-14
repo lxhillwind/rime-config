@@ -13,11 +13,12 @@ function AuxFilter.init(env)
     local opt = {}
     opt.phrase = config:get_bool('aux_code/phrase')
     opt.filter = config:get_bool('aux_code/filter')
+    opt.file = config:get_string('aux_code/file')
     if opt.phrase == nil then opt.phrase = true end
     if opt.filter == nil then opt.filter = true end
 
     AuxFilter.opt = opt
-    AuxFilter.aux_code, AuxFilter.code_map = AuxFilter.readAuxTxt(env.name_space)
+    AuxFilter.aux_code, AuxFilter.code_map = AuxFilter.readAuxTxt(opt.file)
 end
 
 ----------------
