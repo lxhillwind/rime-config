@@ -21,7 +21,11 @@ patch:
     # - derive/^(..)_(.*)$/$1$2/  # 朴素的直接辅助码
     - abbrev/^(.).*$/$1/  # 超级简拼
 
-  engine/filters/@after 0: lua_filter@*aux_code
+  engine/filters:
+    ## - simplifier # 简体词库, 不需要这个.
+    - lua_filter@*aux_code
+    - uniquifier
+
   #aux_code/file: all-utf8.ini  # 这个文件太大了, 可能在 Windows 上读取比较慢.
   aux_code/file: aux-chars-34.ini
   #aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
