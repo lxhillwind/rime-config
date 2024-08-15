@@ -49,7 +49,7 @@
 
 ### [cn_dicts/convert-to-xhup.py](cn_dicts/convert-to-xhup.py)
 
-转换双拼词库为音形码词库.
+转换双拼词库为音形码词库; 依赖 ./lua/all-utf8.ini.
 
 ## 本仓库未包含的文件
 
@@ -74,10 +74,17 @@ aak,3=啊
 - lua/all-utf8.ini 的缩减版 (仅包含码长为 3-4 的部分);
 - 在 Windows 平台上可能加载速度提升比较明显.
 
+```dosini
+# from ./all-utf8.ini; only keep code length 3-4.
+#
+# :exe 'normal 2jdG' | r ./all-utf8.ini
+# :+1,$v/\v^[a-z]{2,4},/d
+```
+
 ### single.txt
 - rime 格式的自定义短语 (用于以词库的方式实现固定编码; 可能它性能更好?);
 - 相比上述 lua 实现的 "自定义短语" 的缺点: 如果字词次序有空洞, 候选位置无法保证;
-- 文件头示例:
+- 文件头:
 
 ```yaml
 # single.txt
@@ -90,15 +97,11 @@ version: '2024-08-10'
 sort: by_weight
 ...
 
-啊	a	99
-按	a	98
-啊	aa	99
-阿	aa	98
-阿	aae	99
-锕	aaj	99
-嗄	aak	99
-吖	aak	98
-啊	aak	97
+
+# exe 'normal 4jdG' | r ./lua/all-utf8.ini
+# :+3,$v/\v^[a-z]/d
+# :+2,$s/,/=/
+# :+1,$!awk -F= '{ OFS="\t"; print($3, $1, 100 - $2) }'
 ```
 
 ### cn_dicts/8105_xhup.dict.yaml 和 cn_dicts/41448_xhup.dict.yaml
