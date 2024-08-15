@@ -98,11 +98,23 @@ sort: by_weight
 ...
 
 
-# exe 'normal 4jdG' | r ./lua/all-utf8.ini
+# exe 'normal 4jdG' | r ./lua/all-utf8.ini | r ./delimiter.ini
 # :+3,$v/\v^[a-z]/d
 # :+2,$s/,/=/
 # :+1,$!awk -F= '{ OFS="\t"; print($3, $1, 100 - $2) }'
 ```
+
+### delimiter.ini
+- 一简码和二简码的分隔符;
+- 用来区分固定字和 script_translator 的单字;
+- 例如, a => `啊 按 |`, aa => `啊 阿 |`; delimiter.ini 就是包含 `|` 的:
+
+```dosini
+# 其他行省略
+a,3=|
+aa,3=|
+```
+
 
 ### cn_dicts/8105_xhup.dict.yaml 和 cn_dicts/41448_xhup.dict.yaml
 
