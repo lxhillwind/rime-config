@@ -3,3 +3,9 @@
 /installation.yaml
 /user.yaml
 /sync/
+
+/cn_dicts/*.yaml
+/cn_dicts_cell/
+# 这几个文件是基本字库 / 词库, 因此要保留在本地.
+!cn_dicts/*_xhup.dict.yaml
+!cn_dicts/base.dict.yaml
