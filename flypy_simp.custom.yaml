@@ -1,17 +1,10 @@
 patch:
-  # {{{
-
   # 使用单字的音形码 + 别人维护的简体词库 (包含注音);
   # *缺点*: 无法使用下方的 "朴素的直接辅助码"; 除非是自造词 (会包含完整音形码).
   # 相比使用简化字八股文作为词库的优势: 多音字词语不再有问题.
-  flypy:
+  translator:
     dictionary: flypy_simp
-    prism: flypy_simp
-  translator: # 如果不指定这个, 就无法生成 dict.
-    dictionary: flypy_simp
-    prism: flypy_simp
-
-  # }}}
+    #prism: flypy_simp  # 多个方案引用同一个词典时才需要.
 
   speller/alphabet: zyxwvutsrqponmlkjihgfedcba_
   speller/algebra:
@@ -40,7 +33,7 @@ patch:
     # 可以注视掉 lua_translator 这一行, 并按需启用另外的行.
     - lua_translator@*top_translator
     # - table_translator@single
-    # - script_translator@flypy
+    # - script_translator
 
   # 使用词库来替换 lua 插件实现的自定义短语;
   # {{{

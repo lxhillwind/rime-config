@@ -9,7 +9,8 @@ local smart = nil
 function top.init(env)
    -- 创建 translator 组件，供后续调用
    fixed = Component.Translator(env.engine, "", "table_translator@single")
-   smart = Component.Translator(env.engine, "", "script_translator@flypy")
+   -- 注意主翻译器的引用方式: @translator
+   smart = Component.Translator(env.engine, "", "script_translator@translator")
 end
 
 function top.fini(env)
