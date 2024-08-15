@@ -1,14 +1,18 @@
 patch:
-  # 使用小鹤的简体字码表;
-  # 通过在 flypy_simp.dict.yaml 中使用 "简化字八股文" (./essay-zh-hans.txt)
-  # (https://github.com/rime/rime-essay-simp), 让其可以有较大的预置词库.
   # {{{
+
+  # 使用单字的音形码 + 别人维护的简体词库 (包含注音);
+  # *缺点*: 无法使用下方的 "朴素的直接辅助码"; 除非是自造词 (会包含完整音形码).
+  # 相比使用简化字八股文作为词库的优势: 多音字词语不再有问题.
   flypy:
     dictionary: flypy_simp
     prism: flypy_simp
   translator: # 如果不指定这个, 就无法生成 dict.
     dictionary: flypy_simp
     prism: flypy_simp
+
+  # }}}
+
   speller/alphabet: zyxwvutsrqponmlkjihgfedcba_
   speller/algebra:
     - derive/^(..).*$/$1/
@@ -16,7 +20,6 @@ patch:
     # 这个与下方 lua_filter@*aux_code 是互斥的: 只能启用一个.
     # - derive/^(..)_(.*)$/$1$2/  # 朴素的直接辅助码
     - abbrev/^(.).*$/$1/  # 超级简拼
-  # }}}
 
   engine/filters/@after 0: lua_filter@*aux_code
   #aux_code/file: all-utf8.ini  # 这个文件太大了, 可能在 Windows 上读取比较慢.
@@ -59,9 +62,9 @@ patch:
     - { when: has_menu, accept: Control+1, send: Shift+Delete }  # 删除当前候选词
     - { when: has_menu, accept: \, send: Shift+Delete }  # 方便在手机上输入
 
-    # flypy_simp 方案覆盖的按键:
+    # 本音形码方案覆盖的按键:
     # Tab 来进入输入辅助码的流程;
-    # (Shift+Right 定位, _ 引导辅助码; flypy_simp.dict.yaml 中使用 _ 作为音形码的分隔符).
+    # (Shift+Right 定位, _ 引导辅助码; 字表中使用 _ 作为音形码的分隔符).
     # 直接使用 Right 键的话, 可能在 linear layout 中不生效.
     - { when: has_menu, accept: Tab, send_sequence: '{Shift+Right}_' }
     # /: 方便在手机上输入

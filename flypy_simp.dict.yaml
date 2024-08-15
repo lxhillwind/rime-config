@@ -1,0 +1,21 @@
+# Rime dictionary
+# encoding: utf-8
+# https://github.com/gaboolic/rime-frost
+#
+# 需将 dicts 转换为双拼;
+# 参考命令:
+#   sed -i -E 's/\ba\b/aa/g; s/\bo\b/oo/g; s/\be\b/ee/g; s/\bang\b/ah/g; s/\beng\b/eg/g; s/ian\b/m/g; s/iao\b/n/g; s/\bsh/u/g; s/\bch/i/g; s/zh/v/g; s/(\w)(iang|uang)\b/\1l/g; s/(\w)(ing|uai)\b/\1k/g; s/(\w)iu\b/\1q/g; s/(\w)ei\b/\1w/g; s/(\w)uan\b/\1r/; s/(\w)(ue|ve)\b/\1t/g; s/un\b/y/g; s/uo\b/o/g; s/(\w)ie\b/\1p/g; s/(\w)(iong|ong)\b/\1s/g; s/(\w)ai\b/\1d/g; s/(\w)en\b/\1f/g; s/(\w)eng\b/\1g/g; s/(\w)ang\b/\1h/g; s/(\w)an\b/\1j/g; s/(\w)ou/\1z/g; s/(\w)(ia|ua)\b/\1x/g; s/(\w)ao/\1c/g; s/(\w)ui\b/\1v/g; s/in\b/b/g' 文件名
+#
+# 如果将词组码表也调整编码, 则可以使用 "朴素的直接辅助码" 了;
+# 但转换过程可能会比较耗时, 暂时先不做.
+
+---
+name: flypy_simp
+version: "2024.08.15"
+sort: by_weight
+use_preset_vocabulary: false
+
+import_tables:
+  - cn_dicts/8105_xhup # 单字码表
+  - cn_dicts/41448_xhup # 生僻字码表
+  - cn_dicts/base # 基本词库

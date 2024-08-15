@@ -43,11 +43,13 @@
   #aux_code/filter: false  # 取消注释来禁用辅助码筛词
 ```
 
-### [essay-zh-hans.txt](essay-zh-hans.txt)
+### [flypy_simp.dict.yaml](flypy_simp.dict.yaml)
 
-"简化字八股文" <https://github.com/rime/rime-essay-simp>;
+简体字库 / 词库; 作为入口, 本身文件不大.
 
-在 flypy_simp.dict.yaml 中用到.
+### [cn_dicts/convert-to-xhup.py](cn_dicts/convert-to-xhup.py)
+
+转换双拼词库为音形码词库.
 
 ## 本仓库未包含的文件
 
@@ -99,37 +101,45 @@ sort: by_weight
 啊	aak	97
 ```
 
-### flypy_simp.dict.yaml
+### cn_dicts/8105_xhup.dict.yaml 和 cn_dicts/41448_xhup.dict.yaml
 
-- 替代 luna_pinyin 的词库 (全拼); 便于使用音形码来构建词语.
-- 文件头示例:
+- 在 [flypy_simp.dict.yaml](flypy_simp.dict.yaml) 中引用;
+- 这 2 个文件的文件头分别如下:
+
+**注意在使用如下 ./cn_dicts/convert-to-xhup.py 进行转换前, 需要使用
+[flypy_simp.dict.yaml](flypy_simp.dict.yaml) 中记载的命令将全拼转换为 (小鹤) 双拼.**
 
 ```yaml
 # Rime dictionary
 # encoding: utf-8
+#
 ---
-name: flypy_simp
-version: "2024.08.11"
+name: 8105_xhup
+version: "2024-08-15"
 sort: by_weight
-use_preset_vocabulary: true
-vocabulary: essay-zh-hans
 ...
 
-# generated from ./lua/all-utf8.ini;
-# 保留码长为 2-4 的字;
-# 部分多音字的常用读音只有2简码, 没有全码, 去掉2简码会导致缺字.
-#
-# 将 _ 作为双拼音节和辅助码的分隔符; 方案的 speller 需要相应调整.
-啊	aa_
-阿	aa_
-阿	aa_e
-锕	aa_j
-嗄	aa_k
-吖	aa_k
-啊	aa_k
+# how to update:
+# :exe 'normal jdG' | r !python3 ./convert-to-xhup.py < 8105.dict.yaml
 ```
+
+```yaml
+# Rime dictionary
+# encoding: utf-8
+#
+---
+name: 41448_xhup
+version: "2024-08-15"
+sort: by_weight
+...
+
+# how to update:
+# :exe 'normal jdG' | r !python3 ./convert-to-xhup.py < 41448.dict.yaml
+```
+
 
 ## 致谢
 
 - <https://github.com/HowcanoeWang/rime-lua-aux-code> RIME输入法辅助码音形分离插件; 本仓库的 lua 代码改动自此.
 - <https://ksqsf.moe/posts/2023-06-01-rime-double-pinyin/> 同时启用 script / table 翻译器并保留造词功能; [lua/top_translator.lua](lua/top_translator.lua) 文件复制自此.
+- <https://github.com/gaboolic/rime-frost> 本仓库使用此处的 cn_dicts 作为字频来源和词库.
