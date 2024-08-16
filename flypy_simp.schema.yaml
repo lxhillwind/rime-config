@@ -10,7 +10,8 @@ schema:
     - 音形方案整合 by lxhillwind
   description: |
     鹤形+双拼。
-  dependencies: []
+  dependencies:
+    - flypy_single
 
 switches:
   - name: ascii_mode
@@ -33,12 +34,7 @@ config_patch:
     #prism: flypy_simp  # 多个方案引用同一个词典时才需要.
 
   single: # custom_phrase; used in top_translator
-    dictionary: ''
-    user_dict: single
-    db_class: stabledb
-    initial_quality: 100
-    enable_completion: false
-    enable_sentence: false
+    __include: flypy_single.schema.yaml:/translator
 
   speller/alphabet: zyxwvutsrqponmlkjihgfedcba_
   speller/algebra:

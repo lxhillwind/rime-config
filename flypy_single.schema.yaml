@@ -1,0 +1,18 @@
+# 这个方案是用来作为 flypy_simp 方案的依赖, 并生成固态词典的.
+# 注意使用的词典文件是 single.dict.yaml
+
+schema:
+  schema_id: flypy_single
+  name: 鹤形单字
+  version: '2024-08-16'
+
+engine:
+  translators:
+    - table_translator
+
+translator:
+  dictionary: single
+  enable_user_dict: false
+  initial_quality: 100
+  enable_completion: false
+  enable_sentence: false
