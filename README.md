@@ -26,9 +26,6 @@
 - 来自 <https://github.com/rime/rime-double-pinyin> 仓库; 用作 flypy_simp 的配置基础.
 
 ### [flypy_simp.schema.yaml](flypy_simp.schema.yaml)
-- 类似 double_pinyin_flypy.schema.yaml, 微调了 /schema 的定义; 主要是为了引出新的方案.
-
-### [flypy_simp.custom.yaml](flypy_simp.custom.yaml)
 - 辅助码作为音节的一部分, 参与组词; 使用自定义的词库, 依赖 "简化字八股文".
 - Tab 键引导使用形码组词.
 - 其中包含了上述 lua 插件的使用说明;
@@ -36,10 +33,15 @@
 引用如下:
 
 ```yaml
-  # 需要放在 simplifier filter 之后
-  engine/filters/@after 0: lua_filter@*aux_code
+  engine/filters:
+    ## - simplifier # 简体词库, 不需要这个.
+    - lua_filter@*aux_code
+    - uniquifier
+
+  ## lua_filter: aux_code 的配置
+  #aux_code/file: all-utf8.ini  # 这个文件太大了, 可能在 Windows 上读取比较慢.
   aux_code/file: aux-chars-34.ini
-  #aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
+  aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
   #aux_code/filter: false  # 取消注释来禁用辅助码筛词
 ```
 
@@ -157,4 +159,5 @@ sort: by_weight
 
 - <https://github.com/HowcanoeWang/rime-lua-aux-code> RIME输入法辅助码音形分离插件; 本仓库的 lua 代码改动自此.
 - <https://ksqsf.moe/posts/2023-06-01-rime-double-pinyin/> 同时启用 script / table 翻译器并保留造词功能; [lua/top_translator.lua](lua/top_translator.lua) 文件复制自此.
-- <https://github.com/gaboolic/rime-frost> 本仓库使用此处的 cn_dicts 作为字频来源和词库.
+- <https://github.com/iDvel/rime-ice> 本仓库使用此处的 cn_dicts 作为字频来源.
+- <https://github.com/gaboolic/rime-frost> 本仓库使用此处的 cn_dicts 作为词库.

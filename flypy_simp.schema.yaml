@@ -23,3 +23,79 @@ switches:
   #   states: [ 漢字, 汉字 ]
   - name: ascii_punct
     states: [ 。，, ．， ]
+
+config_patch:
+  # 使用单字的音形码 + 别人维护的简体词库 (包含注音);
+  # *缺点*: 无法使用下方的 "朴素的直接辅助码"; 除非是自造词 (会包含完整音形码).
+  # 相比使用简化字八股文作为词库的优势: 多音字词语不再有问题.
+  translator:
+    dictionary: flypy_simp
+    #prism: flypy_simp  # 多个方案引用同一个词典时才需要.
+
+  single: # custom_phrase; used in top_translator
+    dictionary: ''
+    user_dict: single
+    db_class: stabledb
+    initial_quality: 100
+    enable_completion: false
+    enable_sentence: false
+
+  speller/alphabet: zyxwvutsrqponmlkjihgfedcba_
+  speller/algebra:
+    - derive/^(..).*$/$1/
+    # 取消注释这一行, 就能免输入引导字符直接使用辅助码了 (支持字和词组);
+    # 这个与下方 lua_filter@*aux_code 是互斥的: 只能启用一个.
+    # - derive/^(..)_(.*)$/$1$2/  # 朴素的直接辅助码
+    - abbrev/^(.).*$/$1/  # 超级简拼
+
+  engine/filters:
+    ## - simplifier # 简体词库, 不需要这个.
+    - lua_filter@*aux_code
+    - uniquifier
+
+  ## lua_filter: aux_code 的配置
+  #aux_code/file: all-utf8.ini  # 这个文件太大了, 可能在 Windows 上读取比较慢.
+  aux_code/file: aux-chars-34.ini
+  aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
+  #aux_code/filter: false  # 取消注释来禁用辅助码筛词
+
+  engine/translators:
+    - punct_translator
+    - reverse_lookup_translator
+    # 在 top_translator 中按情况开启 table_translator / script_translator,
+    # 让造词功能总是可用.
+    # 如果想测试只有 table_translator 或者只有 script_translator 的情况,
+    # 可以注视掉 lua_translator 这一行, 并按需启用另外的行.
+    - lua_translator@*top_translator
+    # - table_translator@single
+    # - script_translator
+
+  recognizer/patterns/reverse_lookup:  # 关闭反查 (` 键)
+
+  ascii_composer/switch_key/Shift_L: commit_code
+  ascii_composer/switch_key/Shift_R: commit_code
+  key_binder/bindings/+:
+    - { when: has_menu, accept: semicolon, send: 2 }  # 次选
+    - { when: has_menu, accept: bracketleft, send: Page_Up }
+    - { when: has_menu, accept: bracketright, send: Page_Down }
+    - { when: composing, accept: Control+BackSpace, send: Escape }  # 清屏
+    - { when: has_menu, accept: Control+1, send: Shift+Delete }  # 删除当前候选词
+    - { when: has_menu, accept: \, send: Shift+Delete }  # 方便在手机上输入
+
+    # 本音形码方案覆盖的按键:
+    # Tab 来进入输入辅助码的流程;
+    # (Shift+Right 定位, _ 引导辅助码; 字表中使用 _ 作为音形码的分隔符).
+    # 直接使用 Right 键的话, 可能在 linear layout 中不生效.
+    - { when: has_menu, accept: Tab, send_sequence: '{Shift+Right}_' }
+    # /: 方便在手机上输入
+    - { when: has_menu, accept: /, send_sequence: '{Shift+Right}_' }
+
+__patch:
+  - config_patch
+  - flypy_simp.custom.yaml:/patch?
+
+
+# 覆盖示例 (在 flypy_simp.custom.yaml 中):
+# patch:
+#   translator/dictionary: words  # 使用其他的词典文件
+#   translator/user_dict: flypy_simp  # 但是还是用原本的 userdb
