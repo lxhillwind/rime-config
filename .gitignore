@@ -12,4 +12,4 @@
 
 # 避免打包本地配置.
 /flypy_simp.custom.yaml
-/words.*.yaml
+/*.extend.dict.yaml

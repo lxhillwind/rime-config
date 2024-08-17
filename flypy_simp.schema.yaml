@@ -93,5 +93,5 @@ __patch:
 
 # 覆盖示例 (在 flypy_simp.custom.yaml 中):
 # patch:
-#   translator/dictionary: words  # 使用其他的词典文件
-#   translator/user_dict: flypy_simp  # 但是还是用原本的 userdb
+#   translator/dictionary: flypy_simp.extend  # 使用其他的词典文件;
+#   # 有共同前缀, 会沿用原本的 userdb.
