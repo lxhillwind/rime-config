@@ -165,5 +165,4 @@ sort: by_weight
 
 - <https://github.com/HowcanoeWang/rime-lua-aux-code> RIME输入法辅助码音形分离插件; 本仓库的 lua 代码改动自此.
 - <https://ksqsf.moe/posts/2023-06-01-rime-double-pinyin/> 同时启用 script / table 翻译器并保留造词功能; [lua/top_translator.lua](lua/top_translator.lua) 文件复制自此.
-- <https://github.com/iDvel/rime-ice> 本仓库使用此处的 cn_dicts 作为字频来源.
-- <https://github.com/gaboolic/rime-frost> 本仓库使用此处的 cn_dicts 作为词库.
+- <https://github.com/gaboolic/rime-frost> 本仓库使用此处的 cn_dicts 作为字频来源 / 词库.
