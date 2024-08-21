@@ -59,6 +59,10 @@ flypy_simp.schema.yaml 依赖此文件.
 
 转换双拼词库为音形码词库; 依赖 ./lua/all-utf8.ini.
 
+### [gen-8105-ini.py](gen-8105-ini.py)
+
+用于从较大的 lua/all-utf8.ini 文件中提取出 8105 常用字的脚本.
+
 ## 本仓库未包含的文件
 
 ### lua/all-utf8.ini
@@ -79,13 +83,13 @@ aak,3=啊
 ```
 
 ### lua/aux-chars-34.ini
-- lua/all-utf8.ini 的缩减版 (仅包含码长为 3-4 的部分);
+- lua/all-utf8.ini 的缩减版 (仅包含码长为 3-4 / 且位于 8105 常用字的部分);
 - 在 Windows 平台上可能加载速度提升比较明显.
 
 ```dosini
-# from ./all-utf8.ini; only keep code length 3-4.
+# from ./lua/all-utf8.ini; only keep code length 3-4 and in 8105 dict.
 #
-# :exe 'normal 2jdG' | r ./all-utf8.ini
+# :exe 'normal 2jdG' | exe 'r !python3 ./gen-8105-ini.py < ./lua/all-utf8.ini'
 # :+1,$v/\v^[a-z]{2,4},/d
 ```
 
@@ -106,7 +110,7 @@ sort: by_weight
 ...
 
 
-# exe 'normal 4jdG' | r ./lua/all-utf8.ini | r ./delimiter.ini
+# exe 'normal 4jdG' | r ./delimiter.ini | exe 'r ./lua/all-utf8.ini'
 # :+3,$v/\v^[a-z]/d
 # :+2,$s/,/=/
 # :+1,$!awk -F= '{ OFS="\t"; print($3, $1, 100 - $2) }'

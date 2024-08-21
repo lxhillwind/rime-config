@@ -17,5 +17,5 @@ use_preset_vocabulary: false
 
 import_tables:
   - cn_dicts/8105_xhup # 单字码表
-  - cn_dicts/41448_xhup # 生僻字码表
+  # - cn_dicts/41448_xhup # 生僻字码表; 不参与组词, 因此推荐从 single.dict.yaml 中输入.
   - cn_dicts/base # 基本词库
