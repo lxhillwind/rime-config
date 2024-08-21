@@ -150,7 +150,9 @@ function AuxFilter.func(input, env)
         local insertLater = {}
         local lastChar = inputCode:sub(#inputCode, #inputCode)
         local hasMatched = false
+        local counter = 0
         for cand in input:iter() do
+            counter = counter + 1
             local found = false
             local testThis = cand.start == 0 and (
             -- 最后一位是前边的辅助码, 或者是最后一个字的辅助码 (*不参与组词*);
@@ -158,20 +160,26 @@ function AuxFilter.func(input, env)
             cand._end + 1 == #inputCode
             )
 
-            for _, codePoint in utf8.codes(cand.text) do
-                if testThis and not found then
-                    local char = utf8.char(codePoint)
-                    local charAuxCodes = AuxFilter.aux_code[char] -- 每個字的輔助碼組
-                    if charAuxCodes:find(lastChar, 1, true) then -- 輔助碼存在
-                        found = true
-                        -- log.error(inputCode .. ' => ' .. cand.text)
-                        yield(Candidate(cand.type, cand.start, cand._end + 1, cand.text, ''))
-                        hasMatched = true
+            if testThis then
+                for _, codePoint in utf8.codes(cand.text) do
+                    if not found then
+                        local char = utf8.char(codePoint)
+                        local charAuxCodes = AuxFilter.aux_code[char] -- 每個字的輔助碼組
+                        if charAuxCodes:find(lastChar, 1, true) then -- 輔助碼存在
+                            found = true
+                            -- log.error(inputCode .. ' => ' .. cand.text)
+                            yield(Candidate(cand.type, cand.start, cand._end + 1, cand.text, ''))
+                            hasMatched = true
+                        end
                     end
+                end
+            else
+                if hasMatched and counter >= 10 then
+                    return
                 end
             end
 
-            if not found then
+            if not hasMatched and not found then
                 table.insert(insertLater, cand)
             end
         end
