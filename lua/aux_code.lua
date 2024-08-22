@@ -68,6 +68,35 @@ function AuxFilter.readAuxTxt(txtpath)
     return auxCodes, codeMap
 end
 
+local function unicode_range_check(char)
+    if AuxFilter.support_extended_set then return true end
+
+    local byte1, byte2, byte3, byte4 = string.byte(char, 1, 4)
+
+    if byte1 >= 0xF0 then
+        -- 4-byte UTF-8 character (not a CJK character in the BMP)
+        return false
+    elseif byte1 >= 0xE0 then
+        -- 3-byte UTF-8 character
+        local codepoint = (byte1 - 0xE0) * 0x1000 + (byte2 - 0x80) * 0x40 + (byte3 - 0x80)
+        return (
+            -- ref: https://zh.wikipedia.org/zh-cn/%E4%B8%AD%E6%97%A5%E9%9F%93%E7%B5%B1%E4%B8%80%E8%A1%A8%E6%84%8F%E6%96%87%E5%AD%97
+            -- 中日韩统一表意文字 (基本)
+            (codepoint >= 0x4e00 and codepoint <= 0x9fa5)
+            or codepoint == 0x3007  -- 〇
+            or (codepoint >= 0xfa0e and codepoint <= 0xfa29) -- 另外12个字
+            -- 中日韩统一表意文字 (扩展区A)
+            or (codepoint >= 0x3400 and codepoint <= 0x4db5)
+        )
+    elseif byte1 >= 0xC0 then
+        -- 2-byte UTF-8 character (not a CJK character)
+        return false
+    else
+        -- 1-byte UTF-8 character (ASCII)
+        return false
+    end
+end
+
 ------------------
 -- filter 主函數 --
 ------------------
@@ -75,6 +104,7 @@ function AuxFilter.func(input, env)
     local context = env.engine.context
     local inputCode = context.input
     local phraseMap = nil
+    AuxFilter.support_extended_set = context:get_option(env.name_space)
 
     -- 处理 "自定义短语"
     if AuxFilter.opt.phrase then
@@ -108,6 +138,20 @@ function AuxFilter.func(input, env)
         return
     end
 
+    local fromScript = inputCode:find('_', 1, true)
+    if not AuxFilter.opt.phrase and #inputCode == 3 then
+        for cand in input:iter() do
+            if cand.start == 0 and cand._end == #inputCode and utf8.len(cand.text) == 1 then
+                if fromScript or unicode_range_check(cand.text) then
+                    yield(cand)
+                end
+            else
+                yield(cand)
+            end
+        end
+        return
+    end
+
     -- 调整长度为4的候选次序; 词组优先. (仅当未使用 "自定义短语" 时)
     if not AuxFilter.opt.phrase and #inputCode == 4 then
         local candSingle = {}
@@ -115,7 +159,9 @@ function AuxFilter.func(input, env)
         for cand in input:iter() do
             if check then
                 if cand.start == 0 and cand._end == #inputCode and utf8.len(cand.text) == 1 then
-                    table.insert(candSingle, cand)
+                    if fromScript or unicode_range_check(cand.text) then
+                        table.insert(candSingle, cand)
+                    end
                 else
                     check = false
                     local reOrder = false

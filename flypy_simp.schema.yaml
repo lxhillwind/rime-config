@@ -22,6 +22,9 @@ switches:
   # 本方案只支持简体.
   # - name: simplification
   #   states: [ 漢字, 汉字 ]
+  # 通过 lua_filter (aux_code) 来过滤字符
+  - name: unicode_charset
+    states: [ 基本, 扩充 ]
   - name: ascii_punct
     states: [ 。，, ．， ]
 
@@ -46,7 +49,7 @@ config_patch:
 
   engine/filters:
     ## - simplifier # 简体词库, 不需要这个.
-    - lua_filter@*aux_code
+    - lua_filter@*aux_code@unicode_charset
     - uniquifier
 
   ## lua_filter: aux_code 的配置
