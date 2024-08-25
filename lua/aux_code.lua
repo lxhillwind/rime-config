@@ -50,7 +50,9 @@ function AuxFilter.readAuxTxt(txtpath)
                     auxCodes[ch] = auxCodes[ch] .. i
                 end
             end
-            if AuxFilter.opt.phrase then
+            -- if AuxFilter.opt.phrase then
+            -- 为了让 script_translator 的输出是排序的, 这个总是需要读取.
+            if true then
                 if not codeMap[code] then
                     codeMap[code] = {}
                 end
@@ -138,17 +140,73 @@ function AuxFilter.func(input, env)
         return
     end
 
-    local fromScript = inputCode:find('_', 1, true)
+    -- 进入造词模式时, 让候选字总是按照指定排序.
+    if inputCode:find('_', 1, true) then
+        local insertBefore = {}
+        local insertAfter = {}
+        local preedit = nil
+        local insertOrder = {}
+        local stopProcessing = false
+        for cand in input:iter() do
+            if stopProcessing then
+                yield(cand)
+            else
+                if preedit == nil and utf8.len(cand.text) == 1 then
+                    preedit = cand.preedit
+                    preedit = preedit:gsub('_', '')
+                    local Map = AuxFilter.code_map[preedit]
+                    if Map then
+                        for k, v in ipairs(Map) do
+                            insertOrder[v] = k
+                        end
+                    end
+                end
+                if utf8.len(cand.text) == 1 then
+                    if insertOrder[cand.text] then
+                        insertBefore[insertOrder[cand.text]] = cand
+                    else
+                        table.insert(insertAfter, cand)
+                    end
+                else
+                    for _, i in ipairs(insertBefore) do
+                        yield(i)
+                    end
+                    insertBefore = {}
+                    for _, i in ipairs(insertAfter) do
+                        yield(i)
+                    end
+                    insertAfter = {}
+                    yield(cand)
+                    stopProcessing = true
+                end
+            end
+        end
+        if #insertBefore > 0 or #insertAfter > 0 then
+            for _, i in ipairs(insertBefore) do
+                yield(i)
+            end
+            insertBefore = {}
+            for _, i in ipairs(insertAfter) do
+                yield(i)
+            end
+            insertAfter = {}
+        end
+
+        return
+    end
+
+    -- 三简码检查是否出候选.
     if not AuxFilter.opt.phrase and #inputCode == 3 then
         for cand in input:iter() do
             if cand.start == 0 and cand._end == #inputCode and utf8.len(cand.text) == 1 then
-                if fromScript or unicode_range_check(cand.text) then
+                if unicode_range_check(cand.text) then
                     yield(cand)
                 end
             else
                 yield(cand)
             end
         end
+
         return
     end
 
@@ -159,7 +217,7 @@ function AuxFilter.func(input, env)
         for cand in input:iter() do
             if check then
                 if cand.start == 0 and cand._end == #inputCode and utf8.len(cand.text) == 1 then
-                    if fromScript or unicode_range_check(cand.text) then
+                    if unicode_range_check(cand.text) then
                         table.insert(candSingle, cand)
                     end
                 else
@@ -235,12 +293,14 @@ function AuxFilter.func(input, env)
                 yield(cand)
             end
         end
+
         return
     else
         -- 直接yield所有待选项，不进入后续迭代，提升性能
         for cand in input:iter() do
             yield(cand)
         end
+
         return
     end
 end
