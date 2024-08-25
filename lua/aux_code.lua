@@ -295,13 +295,11 @@ function AuxFilter.func(input, env)
         end
 
         return
-    else
-        -- 直接yield所有待选项，不进入后续迭代，提升性能
-        for cand in input:iter() do
-            yield(cand)
-        end
+    end
 
-        return
+    -- 所有条件都没有匹配上: 直接 yield.
+    for cand in input:iter() do
+        yield(cand)
     end
 end
 
