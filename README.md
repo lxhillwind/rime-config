@@ -40,7 +40,7 @@
 
   ## lua_filter: aux_code 的配置
   #aux_code/file: all-utf8.ini  # 这个文件太大了, 可能在 Windows 上读取比较慢.
-  aux_code/file: aux-chars-34.ini
+  aux_code/file: aux-chars-234.ini
   aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
   #aux_code/filter: false  # 取消注释来禁用辅助码筛词
 ```
@@ -82,12 +82,12 @@ aak,2=吖
 aak,3=啊
 ```
 
-### lua/aux-chars-34.ini
-- lua/all-utf8.ini 的缩减版 (仅包含码长为 3-4 / 且位于 8105 常用字的部分);
+### lua/aux-chars-234.ini
+- lua/all-utf8.ini 的缩减版 (仅包含码长为 2-4 / 且位于 8105 常用字的部分);
 - 在 Windows 平台上可能加载速度提升比较明显.
 
 ```dosini
-# from ./lua/all-utf8.ini; only keep code length 3-4 and in 8105 dict.
+# from ./lua/all-utf8.ini; only keep code length 2-4 and in 8105 dict.
 #
 # :exe 'normal 2jdG' | exe 'r !python3 ./gen-8105-ini.py < ./lua/all-utf8.ini'
 # :+1,$v/\v^[a-z]{2,4},/d
@@ -128,7 +128,7 @@ aa,3=|
 ```
 
 
-### cn_dicts/8105_xhup.dict.yaml 和 cn_dicts/41448_xhup.dict.yaml
+### cn_dicts/8105_xhup.dict.yaml
 
 - 在 [flypy_simp.dict.yaml](flypy_simp.dict.yaml) 中引用;
 - 这 2 个文件的文件头分别如下:
@@ -149,21 +149,6 @@ sort: by_weight
 # how to update:
 # :exe 'normal jdG' | r !python3 ./convert-to-xhup.py < 8105.dict.yaml
 ```
-
-```yaml
-# Rime dictionary
-# encoding: utf-8
-#
----
-name: 41448_xhup
-version: "2024-08-15"
-sort: by_weight
-...
-
-# how to update:
-# :exe 'normal jdG' | r !python3 ./convert-to-xhup.py < 41448.dict.yaml
-```
-
 
 ## 致谢
 
