@@ -1,0 +1,11 @@
+# Rime dictionary
+# encoding: utf-8
+#
+# 修复小鹤双拼 lo 转换为全拼时, 只能转换为 luo 而导致 咯 (lo) 丢失的问题.
+---
+name: fix_lo
+version: "2024-08-28"
+sort: by_weight
+...
+
+咯	olo	1569

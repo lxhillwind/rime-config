@@ -17,16 +17,16 @@ switches:
   - name: ascii_mode
     reset: 0
     states: [ 中文, 西文 ]
-  - name: full_shape
-    states: [ 半角, 全角 ]
+  # - name: full_shape
+  #   states: [ 半角, 全角 ]
   # 本方案只支持简体.
   # - name: simplification
   #   states: [ 漢字, 汉字 ]
+  - name: ascii_punct
+    states: [ 。，, ．， ]
   # 通过 lua_filter (aux_code) 来过滤字符
   - name: unicode_charset
     states: [ 基本, 扩充 ]
-  - name: ascii_punct
-    states: [ 。，, ．， ]
 
 config_patch:
   # 使用单字的音形码 + 别人维护的简体词库 (包含注音);
@@ -41,7 +41,8 @@ config_patch:
 
   speller/alphabet: zyxwvutsrqponmlkjihgfedcba_
   speller/algebra:
-    - derive/^(..).*$/$1/
+    - xform/^olo$/lo_k/  # 处理 cn_dicts/fix_lo.dict.yaml 对应读音; 它是为全拼准备的.
+    - derive/^(..).*$/$1/  # 将包含辅助码的音节降级为双拼.
     # 取消注释这一行, 就能免输入引导字符直接使用辅助码了 (支持字和词组);
     # 这个与下方 lua_filter@*aux_code 是互斥的: 只能启用一个.
     # - derive/^(..)_(.*)$/$1$2/  # 朴素的直接辅助码
@@ -89,8 +90,44 @@ config_patch:
     # /: 方便在手机上输入
     - { when: has_menu, accept: /, send_sequence: '{Shift+Right}_' }
 
+tiger_lookup_patch:
+  schema/dependencies/@next: tiger
+
+  engine/segmentors:
+    - ascii_segmentor
+    - matcher
+    - affix_segmentor@tiger_lookup
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+
+  engine/translators/@next: table_translator@tiger_lookup
+
+  engine/filters/@next: reverse_lookup_filter@tiger_reverse_lookup
+
+  recognizer/patterns/tiger_lookup: "^#[a-z]*'?$"
+
+  tiger_reverse_lookup:
+    tags: [ tiger_lookup ]
+    dictionary: single
+    overwrite_comment: true
+    comment_format:
+      - erase/^o[a-z]{4}.*/
+      - xform/^(..).*/$1/
+
+  tiger_lookup:
+    tag: tiger_lookup
+    dictionary: tiger
+    enable_user_dict: false
+    prefix: "#"
+    suffix: "'"
+    tips: "〔虎码〕"
+    # comment_format:
+    #   - xform/_.*//
+
 __patch:
   - config_patch
+  - tiger_lookup_patch
   - flypy_simp.custom.yaml:/patch?
 
 

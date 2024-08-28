@@ -63,6 +63,10 @@ flypy_simp.schema.yaml 依赖此文件.
 
 用于从较大的 lua/all-utf8.ini 文件中提取出 8105 常用字的脚本.
 
+### [quanpin.schema.yaml](quanpin.schema.yaml)
+
+全拼.
+
 ## 本仓库未包含的文件
 
 ### lua/all-utf8.ini
@@ -149,6 +153,10 @@ sort: by_weight
 # how to update:
 # :exe 'normal jdG' | r !python3 ./convert-to-xhup.py < 8105.dict.yaml
 ```
+
+### tiger.schema.yaml / tiger.dict.yaml
+
+虎码
 
 ## 致谢
 

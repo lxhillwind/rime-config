@@ -1,6 +1,8 @@
 patch:
   schema_list:
     - schema: flypy_simp
+    - schema: tiger
+    - schema: quanpin
 
   switcher/caption: 方案选单
   switcher/hotkeys/=: [ Control+grave ]  # 仅保留 <C-`>, 去掉 <F4>

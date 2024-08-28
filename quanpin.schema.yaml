@@ -1,0 +1,102 @@
+__include: double_pinyin_flypy.schema.yaml:/
+
+schema:
+  schema_id: quanpin
+  name: 拼音
+  version: "0.1"
+  author:
+    - 小鹤双拼到全拼的转换 by lxhillwind
+  description: |
+    全拼
+  dependencies: []
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 西文 ]
+  # - name: full_shape
+  #   states: [ 半角, 全角 ]
+  # 本方案只支持简体.
+  # - name: simplification
+  #   states: [ 漢字, 汉字 ]
+  - name: ascii_punct
+    states: [ 。，, ．， ]
+
+config_patch:
+  translator:
+    dictionary: flypy_simp
+    prism: quanpin
+
+  speller/alphabet: zyxwvutsrqponmlkjihgfedcba
+  speller/algebra/=:
+    - xform/^(..)_.*$/$1/  # 去掉辅助码
+    # 双拼转全拼
+    #
+    - xform/^aa$/a/
+    - xform/^oo$/o/
+    - xform/^ee$/e/
+    #
+    - xform/^ah$/ang/
+    - xform/^eg$/eng/
+    #
+    - xform/^(.)b$/$1in/
+    - xform/^(.)c$/$1ao/
+    - xform/^(.)d$/$1ai/
+    - xform/^(.)f$/$1en/
+    - xform/^(.)g$/$1eng/
+    - xform/^(.)h$/$1ang/
+    - xform/^(.)j$/$1an/
+    - xform/^([bdjlmnpqtxy])k$/$1ing/
+    - xform/^([ghkuiv])k$/$1uai/
+    - xform/^([bjlnqx])l$/$1iang/
+    - xform/^([ghkuiv])l$/$1uang/
+    - xform/^(.)m$/$1ian/
+    - xform/^([^ae])n$/$1iao/
+    # 字表里有 lo 读音的只有 (咯); 一并转换为 luo.
+    - xform/^([^abfmpwy])o$/$1uo/
+    - xform/^(.)p$/$1ie/
+    - xform/^(.)q$/$1iu/
+    - xform/^([^e])r$/$1uan/
+    - xform/^([jqx])s$/$1iong/
+    - xform/^([^jqx])s$/$1ong/
+    - xform/^([jqxy])t$/$1ue/
+    - xform/^([ln])t$/$1ve/
+    - xform/^([^ln])v$/$1ui/
+    - xform/^(.)w$/$1ei/
+    - xform/^([djlqx])x$/$1ia/
+    - xform/^([^djlqx])x$/$1ua/
+    - xform/^(.)y$/$1un/
+    - xform/^(.)z$/$1ou/
+    #
+    - xform/^u(.*)$/sh$1/
+    - xform/^i(.*)$/ch$1/
+    - xform/^v(.*)$/zh$1/
+
+    # 修复 "咯 (lo)" 在转为全拼后缺失的问题; 配置的读音来自 cn_dicts/fix_lo.dict.yaml
+    - xform/^olo$/lo/
+
+    - abbrev/^(.).*$/$1/  # 超级简拼
+
+  engine/filters:
+    ## - simplifier # 简体词库, 不需要这个.
+    - uniquifier
+
+  engine/translators:
+    - punct_translator
+    - script_translator
+
+  recognizer/patterns/reverse_lookup:  # 关闭反查 (` 键)
+
+  ascii_composer/switch_key/Shift_L: commit_code
+  ascii_composer/switch_key/Shift_R: commit_code
+  key_binder/bindings/+:
+    - { when: has_menu, accept: semicolon, send: 2 }  # 次选
+    - { when: has_menu, accept: bracketleft, send: Page_Up }
+    - { when: has_menu, accept: bracketright, send: Page_Down }
+    - { when: composing, accept: Control+BackSpace, send: Escape }  # 清屏
+    - { when: has_menu, accept: Control+1, send: Shift+Delete }  # 删除当前候选词
+    - { when: has_menu, accept: \, send: Shift+Delete }  # 方便在手机上输入
+
+__patch:
+  - config_patch
+  - quanpin.custom.yaml:/patch?
