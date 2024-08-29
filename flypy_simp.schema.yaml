@@ -11,7 +11,8 @@ schema:
   description: |
     鹤形+双拼。
   dependencies:
-    - flypy_single
+    - _he_single_8105
+    - _he_single
 
 switches:
   - name: ascii_mode
@@ -24,8 +25,8 @@ switches:
   #   states: [ 漢字, 汉字 ]
   - name: ascii_punct
     states: [ 。，, ．， ]
-  # 通过 lua_filter (aux_code) 来过滤字符
-  - name: unicode_charset
+  # 通过 top_translator 来选择使用哪个字典.
+  - name: extended_charset
     states: [ 基本, 扩充 ]
 
 config_patch:
@@ -36,8 +37,10 @@ config_patch:
     dictionary: flypy_simp
     #prism: flypy_simp  # 多个方案引用同一个词典时才需要.
 
-  single: # custom_phrase; used in top_translator
-    __include: flypy_single.schema.yaml:/translator
+  fixed_8105: # used in top_translator
+    __include: _he_single_8105.schema.yaml:/translator
+  fixed_full: # used in top_translator
+    __include: _he_single.schema.yaml:/translator
 
   speller/alphabet: zyxwvutsrqponmlkjihgfedcba_
   speller/algebra:
@@ -50,7 +53,7 @@ config_patch:
 
   engine/filters:
     ## - simplifier # 简体词库, 不需要这个.
-    - lua_filter@*aux_code@unicode_charset
+    - lua_filter@*aux_code
     - uniquifier
 
   ## lua_filter: aux_code 的配置
@@ -62,13 +65,9 @@ config_patch:
   engine/translators:
     - punct_translator
     - reverse_lookup_translator
-    # 在 top_translator 中按情况开启 table_translator / script_translator,
-    # 让造词功能总是可用.
-    # 如果想测试只有 table_translator 或者只有 script_translator 的情况,
-    # 可以注视掉 lua_translator 这一行, 并按需启用另外的行.
-    - lua_translator@*top_translator
-    # - table_translator@single
-    # - script_translator
+    # 在 top_translator 中选择使用哪个 table_translator.
+    - lua_translator@*top_translator@extended_charset
+    - script_translator
 
   recognizer/patterns/reverse_lookup:  # 关闭反查 (` 键)
 
@@ -109,7 +108,7 @@ tiger_lookup_patch:
 
   tiger_reverse_lookup:
     tags: [ tiger_lookup ]
-    dictionary: single
+    dictionary: _he_single
     overwrite_comment: true
     comment_format:
       - erase/^o[a-z]{4}.*/

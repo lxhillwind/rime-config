@@ -1,0 +1,15 @@
+# 这个方案是用来作为 flypy_simp 方案的依赖, 并生成固态词典的.
+
+schema:
+  schema_id: _he_single_8105
+  name: 鹤形单字8105
+  version: '2024-08-16'
+
+engine:
+  translators:
+    - table_translator
+
+translator:
+  __include: _he_single.schema.yaml:/translator
+  __patch:
+    dictionary: _he_single_8105

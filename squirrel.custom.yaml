@@ -1,7 +1,5 @@
 # squirrel.custom.yaml
 patch:
-  app_options/org.vim.MacVim: { vim_mode: true }  # 仅去掉默认的 ascii_mode: true
-
   style/+:
     candidate_list_layout: linear  # 使用横排候选.
     font_point: 20

@@ -49,7 +49,7 @@
 
 简体字库 / 词库; 作为入口, 本身文件不大.
 
-### [flypy_single.schema.yaml](flypy_single.schema.yaml)
+### [_he_single.schema.yaml](_he_single.schema.yaml)
 
 将单字以固态词典的方式提供, 确保候选顺序.
 
@@ -66,6 +66,10 @@ flypy_simp.schema.yaml 依赖此文件.
 ### [quanpin.schema.yaml](quanpin.schema.yaml)
 
 全拼.
+
+### _he_single_8105.schema.yaml / _tiger_8105.schema.yaml
+
+鹤形 / 虎码的 8105 子集
 
 ## 本仓库未包含的文件
 
@@ -97,18 +101,17 @@ aak,3=啊
 # :+1,$v/\v^[a-z]{2,4},/d
 ```
 
-### single.dict.yaml
+### _he_single.dict.yaml
 - rime 格式的自定义短语 (用于以词库的方式实现固定编码; 可能它性能更好?);
 - 相比上述 lua 实现的 "自定义短语" 的缺点: 如果字词次序有空洞, 候选位置无法保证;
 - 文件头:
 
 ```yaml
-# single.dict.yaml
 # encoding: utf-8
 # generated from ./lua/all-utf8.ini;
 # 3rd column: 100 - seq
 ---
-name: single
+name: _he_single
 version: '2024-08-10'
 sort: by_weight
 ...
@@ -157,6 +160,10 @@ sort: by_weight
 ### tiger.schema.yaml / tiger.dict.yaml
 
 虎码
+
+### _he_single_8105.dict.yaml / _tiger_8105.dict.yaml
+
+鹤形 / 虎码的 8105 子集
 
 ## 致谢
 
