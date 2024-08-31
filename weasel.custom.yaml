@@ -3,11 +3,13 @@ patch:
   style/+:
     horizontal: true
     inline_preedit: true
-    font_point: 16
+    font_point: 18
+    label_font_point: 18
+    comment_font_point: 18
     color_scheme: Alpha-white
   style/layout/+:
-    margin_x: 3
-    margin_y: 3
+    margin_x: 6
+    margin_y: 6
     border_width: 1
 
   preset_color_schemes/+:
