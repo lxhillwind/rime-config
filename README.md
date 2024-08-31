@@ -22,11 +22,8 @@
 ### [default.custom.yaml](default.custom.yaml)
 - 个人配置入口.
 
-### [double_pinyin_flypy.schema.yaml](double_pinyin_flypy.schema.yaml)
-- 来自 <https://github.com/rime/rime-double-pinyin> 仓库; 用作 flypy_simp 的配置基础.
-
 ### [flypy_simp.schema.yaml](flypy_simp.schema.yaml)
-- 辅助码作为音节的一部分, 参与组词; 使用自定义的词库, 依赖 "简化字八股文".
+- 辅助码作为音节的一部分, 参与组词; 使用白霜词库 (rime-frost).
 - Tab 键引导使用形码组词.
 - 其中包含了上述 lua 插件的使用说明;
 
@@ -53,8 +50,6 @@
 
 将单字以固态词典的方式提供, 确保候选顺序.
 
-flypy_simp.schema.yaml 依赖此文件.
-
 ### [cn_dicts/convert-to-xhup.py](cn_dicts/convert-to-xhup.py)
 
 转换双拼词库为音形码词库; 依赖 ./lua/all-utf8.ini.
@@ -63,13 +58,21 @@ flypy_simp.schema.yaml 依赖此文件.
 
 用于从较大的 lua/all-utf8.ini 文件中提取出 8105 常用字的脚本.
 
+### [gen-8105-table.py](gen-8105-table.py)
+
+用于从较大的 rime 格式码表文件中提取出 8105 常用字的脚本.
+
 ### [quanpin.schema.yaml](quanpin.schema.yaml)
 
 全拼.
 
+### [tiger.schema.yaml](tiger.schema.yaml)
+
+虎码.
+
 ### _he_single_8105.schema.yaml / _tiger_8105.schema.yaml
 
-鹤形 / 虎码的 8105 子集
+鹤形 / 虎码的 8105 子集的方案文件.
 
 ## 本仓库未包含的文件
 
@@ -138,7 +141,7 @@ aa,3=|
 ### cn_dicts/8105_xhup.dict.yaml
 
 - 在 [flypy_simp.dict.yaml](flypy_simp.dict.yaml) 中引用;
-- 这 2 个文件的文件头分别如下:
+- 这个文件的文件头如下:
 
 **注意在使用如下 ./cn_dicts/convert-to-xhup.py 进行转换前, 需要使用
 [flypy_simp.dict.yaml](flypy_simp.dict.yaml) 中记载的命令将全拼转换为 (小鹤) 双拼.**
@@ -157,9 +160,9 @@ sort: by_weight
 # :exe 'normal jdG' | r !python3 ./convert-to-xhup.py < 8105.dict.yaml
 ```
 
-### tiger.schema.yaml / tiger.dict.yaml
+### tiger.dict.yaml
 
-虎码
+虎码的码表
 
 ### _he_single_8105.dict.yaml / _tiger_8105.dict.yaml
 

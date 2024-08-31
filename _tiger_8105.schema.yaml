@@ -10,6 +10,6 @@ engine:
     - table_translator
 
 translator:
-  __include: tiger.schema.yaml:/translator
+  __include: tiger.schema.yaml:/config_tiger/translator
   __patch:
     dictionary: _tiger_8105

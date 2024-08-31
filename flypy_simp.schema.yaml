@@ -1,5 +1,3 @@
-__include: double_pinyin_flypy.schema.yaml:/
-
 schema:
   schema_id: flypy_simp
   name: 鹤形
@@ -10,9 +8,7 @@ schema:
     - 音形方案整合 by lxhillwind
   description: |
     鹤形+双拼。
-  dependencies:
-    - _he_single_8105
-    - _he_single
+  dependencies: []
 
 switches:
   - name: ascii_mode
@@ -20,60 +16,48 @@ switches:
     states: [ 中文, 西文 ]
   # - name: full_shape
   #   states: [ 半角, 全角 ]
-  # 本方案只支持简体.
   # - name: simplification
   #   states: [ 漢字, 汉字 ]
   - name: ascii_punct
     states: [ 。，, ．， ]
-  # 通过 top_translator 来选择使用哪个字典.
-  - name: extended_charset
-    states: [ 基本, 扩充 ]
 
-config_patch:
-  # 使用单字的音形码 + 别人维护的简体词库 (包含注音);
-  # *缺点*: 无法使用下方的 "朴素的直接辅助码"; 除非是自造词 (会包含完整音形码).
-  # 相比使用简化字八股文作为词库的优势: 多音字词语不再有问题.
-  translator:
-    dictionary: flypy_simp
-    #prism: flypy_simp  # 多个方案引用同一个词典时才需要.
+config_base:
+  engine:
+    processors:
+      - ascii_composer
+      - recognizer
+      - key_binder
+      - speller
+      - punctuator
+      - selector
+      - navigator
+      - express_editor
+    segmentors:
+      - ascii_segmentor
+      - matcher
+      - abc_segmentor
+      - punct_segmentor
+      - fallback_segmentor
+    translators:
+      - punct_translator
+      # - reverse_lookup_translator
+      # - script_translator
+      # - table_translator
+    filters:
+      # - simplifier
+      - uniquifier
+  punctuator:
+    import_preset: default
+  key_binder:
+    # import_preset: default
+  recognizer:
+    import_preset: default
 
-  fixed_8105: # used in top_translator
-    __include: _he_single_8105.schema.yaml:/translator
-  fixed_full: # used in top_translator
-    __include: _he_single.schema.yaml:/translator
-
-  speller/alphabet: zyxwvutsrqponmlkjihgfedcba_
-  speller/algebra:
-    - xform/^olo$/lo_k/  # 处理 cn_dicts/fix_lo.dict.yaml 对应读音; 它是为全拼准备的.
-    - derive/^(..).*$/$1/  # 将包含辅助码的音节降级为双拼.
-    # 取消注释这一行, 就能免输入引导字符直接使用辅助码了 (支持字和词组);
-    # 这个与下方 lua_filter@*aux_code 是互斥的: 只能启用一个.
-    # - derive/^(..)_(.*)$/$1$2/  # 朴素的直接辅助码
-    - abbrev/^(.).*$/$1/  # 超级简拼
-
-  engine/filters:
-    ## - simplifier # 简体词库, 不需要这个.
-    - lua_filter@*aux_code
-    - uniquifier
-
-  ## lua_filter: aux_code 的配置
-  #aux_code/file: all-utf8.ini  # 这个文件太大了, 可能在 Windows 上读取比较慢.
-  aux_code/file: aux-chars-234.ini
-  aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
-  #aux_code/filter: false  # 取消注释来禁用辅助码筛词
-
-  engine/translators:
-    - punct_translator
-    - reverse_lookup_translator
-    # 在 top_translator 中选择使用哪个 table_translator.
-    - lua_translator@*top_translator@extended_charset
-    - script_translator
-
+config_keybinding:
   recognizer/patterns/reverse_lookup:  # 关闭反查 (` 键)
-
   ascii_composer/switch_key/Shift_L: commit_code
   ascii_composer/switch_key/Shift_R: commit_code
-  key_binder/bindings/+:
+  key_binder/bindings/=:
     - { when: has_menu, accept: semicolon, send: 2 }  # 次选
     - { when: has_menu, accept: bracketleft, send: Page_Up }
     - { when: has_menu, accept: bracketright, send: Page_Down }
@@ -81,7 +65,31 @@ config_patch:
     - { when: has_menu, accept: Control+1, send: Shift+Delete }  # 删除当前候选词
     - { when: has_menu, accept: \, send: Shift+Delete }  # 方便在手机上输入
 
-    # 本音形码方案覆盖的按键:
+config_flypy:
+  # 使用单字的音形码 + 别人维护的简体词库 (包含注音);
+  # *缺点*: 无法使用下方的 "朴素的直接辅助码"; 除非是自造词 (会包含完整音形码).
+  # 相比使用简化字八股文作为词库的优势: 多音字词语不再有问题.
+  translator:
+    dictionary: flypy_simp
+    #prism: flypy_simp  # 多个方案引用同一个词典时才需要.
+
+  speller/alphabet: zyxwvutsrqponmlkjihgfedcba_
+  speller/algebra:
+    - xform/^olo$/lo_k/  # 处理 cn_dicts/fix_lo.dict.yaml 对应读音; 它是为全拼准备的.
+    - derive/^(..).*$/$1/  # 将包含辅助码的音节降级为双拼.
+    # 这个与下方 lua_filter@*aux_code 是互斥的: 只能启用一个.
+    - derive/^(..)_(.*)$/$1$2/  # 免输入引导字符直接使用辅助码 (单字; 没有词语中筛字的功能)
+    - abbrev/^(.).*$/$1/  # 超级简拼
+
+  engine/translators:
+    - punct_translator
+    - script_translator
+
+  engine/filters:
+    ## - simplifier # 简体词库, 不需要这个.
+    - uniquifier
+
+  key_binder/bindings/+:
     # Tab 来进入输入辅助码的流程;
     # (Shift+Right 定位, _ 引导辅助码; 字表中使用 _ 作为音形码的分隔符).
     # 直接使用 Right 键的话, 可能在 linear layout 中不生效.
@@ -89,7 +97,42 @@ config_patch:
     # /: 方便在手机上输入
     - { when: has_menu, accept: /, send_sequence: '{Shift+Right}_' }
 
-tiger_lookup_patch:
+config_lua_translator:
+  switches/+:
+    # 通过 top_translator 来选择使用哪个字典.
+    - name: extended_charset
+      states: [ 基本, 扩充 ]
+
+  schema/dependencies/+:
+    - _he_single_8105
+    - _he_single
+
+  fixed_8105: # used in top_translator
+    __include: _he_single_8105.schema.yaml:/translator
+  fixed_full: # used in top_translator
+    __include: _he_single.schema.yaml:/translator
+
+  engine/translators:
+    - punct_translator
+    # 在 top_translator 中选择使用哪个 table_translator.
+    - lua_translator@*top_translator@extended_charset
+    - script_translator
+
+config_lua_filter:
+  speller/algebra:  # 复制粘贴自 config_flypy 中的 speller/algebra; 注释了一个.
+    - xform/^olo$/lo_k/
+    - derive/^(..).*$/$1/
+    # - derive/^(..)_(.*)$/$1$2/
+    - abbrev/^(.).*$/$1/
+  engine/filters/@before 0: lua_filter@*aux_code
+
+  ## lua_filter: aux_code 的配置
+  #aux_code/file: all-utf8.ini  # 这个文件太大了, 可能在 Windows 上读取比较慢.
+  aux_code/file: aux-chars-234.ini
+  aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
+  #aux_code/filter: false  # 取消注释来禁用辅助码筛词
+
+config_tiger_lookup:
   schema/dependencies/@next: tiger
 
   engine/segmentors:
@@ -125,10 +168,13 @@ tiger_lookup_patch:
     #   - xform/_.*//
 
 __patch:
-  - config_patch
-  - tiger_lookup_patch
+  - config_base
+  - config_keybinding
+  - config_flypy
+  - config_lua_translator
+  - config_lua_filter
+  - config_tiger_lookup
   - flypy_simp.custom.yaml:/patch?
-
 
 # 覆盖示例 (在 flypy_simp.custom.yaml 中):
 # patch:

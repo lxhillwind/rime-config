@@ -1,0 +1,75 @@
+schema:
+  author: []
+  dependencies: []
+  description: |
+    虎码官方单字
+  name: "虎码"
+  schema_id: tiger
+  version: 0.9
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 西文 ]
+  - name: ascii_punct
+    states: [ 。，, ．， ]
+
+config_base:
+  __include: flypy_simp.schema.yaml:/config_base
+
+config_keybinding:
+  __include: flypy_simp.schema.yaml:/config_keybinding
+
+config_tiger:
+  engine/filters/=:
+    - uniquifier
+  # speller / translator 内容复制自 tiger 官方 rime 配置.
+  speller:
+    auto_clear: max_length
+    auto_select: true
+    max_code_length: 4
+  translator:
+    dictionary: tiger
+    enable_encoder: true  # 补全
+    enable_sentence: false  # ?
+    encode_commit_history: true  # ?
+    max_phrase_length: 4  # ?
+    enable_user_dict: false  # 禁止造词
+
+config_lua_translator:
+  switches/+:
+    # 通过 top_translator 来选择使用哪个字典.
+    - name: extended_charset
+      states: [ 基本, 扩充 ]
+
+  schema/dependencies/+:
+    - _tiger_8105
+
+  fixed_8105: # used in top_translator
+    __include: _tiger_8105.schema.yaml:/translator
+  fixed_full: # used in top_translator
+    __include: config_tiger/translator
+  engine/translators/=:
+    - punct_translator
+    - reverse_lookup_translator
+    # 在 top_translator 中选择使用哪个 table_translator.
+    - lua_translator@*top_translator@extended_charset
+
+config_flypy_lookup:
+  schema/dependencies/+:
+    - _he_single
+  recognizer/patterns/reverse_lookup: "^#[a-z]*'?$"
+  reverse_lookup:
+    dictionary: _he_single
+    enable_user_dict: false
+    prefix: "#"
+    suffix: "'"
+    tips: "〔鹤形〕"
+
+__patch:
+  - config_base
+  - config_keybinding
+  - config_tiger
+  - config_lua_translator
+  - config_flypy_lookup
+  - tiger.custom.yaml:/patch?
