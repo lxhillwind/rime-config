@@ -23,6 +23,9 @@ config_keybinding:
 config_tiger:
   engine/filters/=:
     - uniquifier
+  engine/translators/=:
+    - punct_translator
+    - table_translator
   # speller / translator 内容复制自 tiger 官方 rime 配置.
   speller:
     auto_clear: max_length
@@ -30,10 +33,7 @@ config_tiger:
     max_code_length: 4
   translator:
     dictionary: tiger
-    enable_encoder: true  # 补全
-    enable_sentence: false  # ?
-    encode_commit_history: true  # ?
-    max_phrase_length: 4  # ?
+    enable_completion: false  # 补全
     enable_user_dict: false  # 禁止造词
 
 config_lua_translator:
@@ -51,13 +51,13 @@ config_lua_translator:
     __include: config_tiger/translator
   engine/translators/=:
     - punct_translator
-    - reverse_lookup_translator
     # 在 top_translator 中选择使用哪个 table_translator.
     - lua_translator@*top_translator@extended_charset
 
 config_flypy_lookup:
   schema/dependencies/+:
     - _he_single
+  engine/translators/@next: reverse_lookup_translator
   recognizer/patterns/reverse_lookup: "^#[a-z]*'?$"
   reverse_lookup:
     dictionary: _he_single
@@ -70,6 +70,6 @@ __patch:
   - config_base
   - config_keybinding
   - config_tiger
-  - config_lua_translator
+  # - config_lua_translator
   - config_flypy_lookup
   - tiger.custom.yaml:/patch?

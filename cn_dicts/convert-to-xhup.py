@@ -5,7 +5,7 @@ import re
 
 data = {}
 
-with open('../lua/all-utf8.ini') as f:
+with open('../lua/flypy.ini') as f:
     for line in f.readlines():
         line = line.strip()
         arr = re.match('^([a-z]+),([0-9]+)=(.+)$', line)

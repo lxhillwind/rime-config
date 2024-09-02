@@ -14,7 +14,7 @@
 
 ![直接辅助码](pic/辅助码.png)
 
-- 由于版权因素, 本仓库并不提供 "自定义短语" 文件 (即下方说明的 "lua/all-utf8.ini").
+- 由于版权因素, 本仓库并不提供 "自定义短语" 文件 (即下方说明的 "lua/flypy.ini").
 
 ### [lua/top_translator.lua](lua/top_translator.lua)
 - 复制自 <https://ksqsf.moe/posts/2023-06-01-rime-double-pinyin/>; 用于处理混用 table_translator 和 script_translator 时的造词问题.
@@ -36,7 +36,7 @@
     - uniquifier
 
   ## lua_filter: aux_code 的配置
-  #aux_code/file: all-utf8.ini  # 这个文件太大了, 可能在 Windows 上读取比较慢.
+  #aux_code/file: flypy.ini  # 这个文件太大了, 可能在 Windows 上读取比较慢.
   aux_code/file: aux-chars-234.ini
   aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
   #aux_code/filter: false  # 取消注释来禁用辅助码筛词
@@ -52,11 +52,11 @@
 
 ### [cn_dicts/convert-to-xhup.py](cn_dicts/convert-to-xhup.py)
 
-转换双拼词库为音形码词库; 依赖 ./lua/all-utf8.ini.
+转换双拼词库为音形码词库; 依赖 ./lua/flypy.ini.
 
 ### [gen-8105-ini.py](gen-8105-ini.py)
 
-用于从较大的 lua/all-utf8.ini 文件中提取出 8105 常用字的脚本.
+用于从较大的 lua/flypy.ini 文件中提取出 8105 常用字的脚本.
 
 ### [gen-8105-table.py](gen-8105-table.py)
 
@@ -76,7 +76,7 @@
 
 ## 本仓库未包含的文件
 
-### lua/all-utf8.ini
+### lua/flypy.ini
 - `编码,序号=字词` 格式的 "自定义短语" (不满足这个格式的行会被忽略);
 - 当然, 你可以将其改成其他文件名; 只要在方案中引用此插件时进行对应修改即可.
 - 文件头示例:
@@ -94,13 +94,13 @@ aak,3=啊
 ```
 
 ### lua/aux-chars-234.ini
-- lua/all-utf8.ini 的缩减版 (仅包含码长为 2-4 / 且位于 8105 常用字的部分);
+- lua/flypy.ini 的缩减版 (仅包含码长为 2-4 / 且位于 8105 常用字的部分);
 - 在 Windows 平台上可能加载速度提升比较明显.
 
 ```dosini
-# from ./lua/all-utf8.ini; only keep code length 2-4 and in 8105 dict.
+# from ./lua/flypy.ini; only keep code length 2-4 and in 8105 dict.
 #
-# :exe 'normal 2jdG' | exe 'r !python3 ./gen-8105-ini.py < ./lua/all-utf8.ini'
+# :exe 'normal 2jdG' | exe 'r !python3 ./gen-8105-ini.py < ./lua/flypy.ini'
 # :+1,$v/\v^[a-z]{2,4},/d
 ```
 
@@ -111,7 +111,7 @@ aak,3=啊
 
 ```yaml
 # encoding: utf-8
-# generated from ./lua/all-utf8.ini;
+# generated from ./lua/flypy.ini;
 # 3rd column: 100 - seq
 ---
 name: _he_single
@@ -120,7 +120,7 @@ sort: by_weight
 ...
 
 
-# exe 'normal 4jdG' | r ./delimiter.ini | exe 'r ./lua/all-utf8.ini'
+# exe 'normal 4jdG' | r ./delimiter.ini | exe 'r ./lua/flypy.ini'
 # :+3,$v/\v^[a-z]/d
 # :+2,$s/,/=/
 # :+1,$!awk -F= '{ OFS="\t"; print($3, $1, 100 - $2) }'
