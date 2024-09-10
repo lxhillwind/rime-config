@@ -34,7 +34,8 @@ config_tiger:
   translator:
     dictionary: tiger
     enable_completion: false  # 补全
-    enable_user_dict: false  # 禁止造词
+    enable_sentence: false  # 禁止造词
+    enable_user_dict: false  # 禁止记录造词
 
 config_lua_translator:
   switches/+:

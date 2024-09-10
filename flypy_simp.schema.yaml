@@ -161,6 +161,7 @@ config_tiger_lookup:
     tag: tiger_lookup
     dictionary: tiger
     enable_completion: false
+    enable_sentence: false  # 禁止造词
     enable_user_dict: false
     prefix: "#"
     suffix: "'"
