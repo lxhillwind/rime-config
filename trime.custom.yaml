@@ -1,0 +1,43 @@
+# trime.custom.yaml
+patch:
+  preset_keyboards/flypy_simp/import_preset: qwerty
+  preset_keyboards/tiger/import_preset: qwerty
+  preset_keyboards/quanpin/import_preset: qwerty
+
+  preset_keys/Keyboard_eng: {label: En, send: Eisu_toggle, select: eng}
+
+  # 让英文键盘的切换键是返回上一个键盘 (即九宫格).
+  preset_keyboards/eng/import_preset: qwerty
+  # TODO: 无效.
+  preset_keyboards/eng/keys/@30/click: Keyboard_default
+
+  preset_keyboards/t9:
+    name: 9键
+    author: 'lxhillwind'
+    ascii_mode: 0
+    width: 23
+    height: 50
+    keys:
+      - {width: 15, label: '符', click: Keyboard_symbols}
+      - {label: 'sz', click: '1', swipe_up: KP_1}
+      - {label: 'abc', click: '2', swipe_up: KP_2}
+      - {label: 'def', click: '3', swipe_up: KP_3}
+      - {width: 16, click: BackSpace}
+
+      - {width: 15, click: Keyboard_number}
+      - {label: 'ghi', click: '4', swipe_up: KP_4}
+      - {label: 'jkl', click: '5', swipe_up: KP_5}
+      - {label: 'mno', click: '6', swipe_up: KP_6}
+      - {width: 16, click: redo}
+
+      - {width: 15, click: IME_switch}
+      - {label: 'pqr', click: '7', swipe_up: KP_7}
+      - {label: 'tuv', click: '8', swipe_up: KP_8}
+      - {label: 'wxy', click: '9', swipe_up: KP_9}
+      - {width: 16, click: undo}
+
+      - {width: 15, click: Keyboard_eng, long_click: Menu}
+      - {width: 15, click: ','}
+      - {width: 39, click: space}
+      - {width: 15, click: .}
+      - {width: 16, click: Return}
