@@ -1,0 +1,72 @@
+schema:
+  schema_id: t9
+  name: 九宫格
+  version: "0.1"
+  author:
+    - 全键盘到九宫格的转换 by lxhillwind
+  description: |
+    九宫格双拼
+  dependencies: []
+
+switches:
+  - name: ascii_mode
+    reset: 0
+    states: [ 中文, 西文 ]
+  # - name: full_shape
+  #   states: [ 半角, 全角 ]
+  # 本方案只支持简体.
+  # - name: simplification
+  #   states: [ 漢字, 汉字 ]
+  - name: ascii_punct
+    states: [ 。，, ．， ]
+
+config_patch:
+  translator:
+    dictionary: flypy_simp
+    prism: t9
+
+  speller/alphabet: '123456789'
+  speller/algebra/=:
+    - xform/^(..).*$/$1/  # 去掉辅助码
+    # 其他部分由 t9.keymap.py 来生成.
+
+  engine/filters:
+    ## - simplifier # 简体词库, 不需要这个.
+    - uniquifier
+
+  engine/translators:
+    - punct_translator
+    - script_translator
+
+__patch:
+  - flypy_simp.schema.yaml:/config_base
+  - flypy_simp.schema.yaml:/config_keybinding
+  - config_patch
+  - speller/algebra/+:
+      __include: t9.keymap.yaml:/data
+
+  # - speller/algebra/+:
+    # - abbrev/^(..).+$/$1/  # 允许2键匹配完整音节 (例如组词的时候).
+  ## 但是启用之后, 码长为4时, 词组的优先级会高于单字+辅助码 (甚至无法生成后者).
+
+  - engine/filters/@before 0: lua_filter@*aux_t9
+    aux_code/file: aux-chars-234.ini
+
+  - key_binder/bindings/+: # 1-9 won't work now; use left-right key to move selection.
+    - { when: has_menu, accept: Left, send: Up }
+    - { when: has_menu, accept: Right, send: Down }
+
+  # enable this if on desktop.
+  # - key_binder/bindings/+: # numpad: 789 456 123 top-down.
+  #   - { when: always, accept: KP_7, send: 1 }
+  #   - { when: always, accept: KP_8, send: 2 }
+  #   - { when: always, accept: KP_9, send: 3 }
+  #   - { when: always, accept: KP_4, send: 4 }
+  #   - { when: always, accept: KP_5, send: 5 }
+  #   - { when: always, accept: KP_6, send: 6 }
+  #   - { when: always, accept: KP_1, send: 7 }
+  #   - { when: always, accept: KP_2, send: 8 }
+  #   - { when: always, accept: KP_3, send: 9 }
+  #   - { when: always, accept: KP_0, send: space }
+
+  - t9.custom.yaml:/patch?
