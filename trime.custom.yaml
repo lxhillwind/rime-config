@@ -28,13 +28,13 @@ patch:
       - {label: 'ghi', click: '4', swipe_up: KP_4}
       - {label: 'jkl', click: '5', swipe_up: KP_5}
       - {label: 'mno', click: '6', swipe_up: KP_6}
-      - {width: 16, click: redo}
+      - {width: 16, click: undo}
 
       - {width: 15, click: IME_switch}
       - {label: 'pqr', click: '7', swipe_up: KP_7}
       - {label: 'tuv', click: '8', swipe_up: KP_8}
       - {label: 'wxy', click: '9', swipe_up: KP_9}
-      - {width: 16, click: undo}
+      - {width: 16, click: redo}
 
       - {width: 15, click: Keyboard_eng, long_click: Menu}
       - {width: 15, click: ','}
