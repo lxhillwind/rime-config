@@ -3,7 +3,9 @@ schema:
   name: 九宫格
   version: "0.1"
   author:
-    - 全键盘到九宫格的转换 by lxhillwind
+    # https://zhuanlan.zhihu.com/p/107201990
+    - 九宫格双拼的无重码排布 by 同志请烧点水 (知乎)
+    # 此方案中, 将原本 1 键上的字母进行了修改: qw* => sz'.
   description: |
     九宫格双拼
   dependencies: []
