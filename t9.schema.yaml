@@ -30,7 +30,47 @@ config_patch:
   speller/alphabet: '123456789'
   speller/algebra/=:
     - xform/^(..).*$/$1/  # 去掉辅助码
-    # 其他部分由 t9.keymap.py 来生成.
+
+    -  xform/^([sz])(.)(.*)$/$1$2$3A/
+    - xform/^([abc])(.)(.*)$/$1$2$3B/
+    - xform/^([def])(.)(.*)$/$1$2$3C/
+    - xform/^([ghi])(.)(.*)$/$1$2$3D/
+    - xform/^([jkl])(.)(.*)$/$1$2$3E/
+    - xform/^([mno])(.)(.*)$/$1$2$3F/
+    - xform/^([pqr])(.)(.*)$/$1$2$3G/
+    - xform/^([tuv])(.)(.*)$/$1$2$3H/
+    - xform/^([wxy])(.)(.*)$/$1$2$3I/
+
+    -  xform/^(.)([sz])(.*)$/$1$2$3A/
+    - xform/^(.)([abc])(.*)$/$1$2$3B/
+    - xform/^(.)([def])(.*)$/$1$2$3C/
+    - xform/^(.)([ghi])(.*)$/$1$2$3D/
+    - xform/^(.)([jkl])(.*)$/$1$2$3E/
+    - xform/^(.)([mno])(.*)$/$1$2$3F/
+    - xform/^(.)([pqr])(.*)$/$1$2$3G/
+    - xform/^(.)([tuv])(.*)$/$1$2$3H/
+    - xform/^(.)([wxy])(.*)$/$1$2$3I/
+
+    - xform/^([sadgjmptw])(.)(.*)$/$1$2$3A/
+    - xform/^([zbehknqux])(.)(.*)$/$1$2$3B/
+    -  xform/^([cfilorvy])(.)(.*)$/$1$2$3C/
+
+    - xform/^(.)([sadgjmptw])(.*)$/$1$2$3A/
+    - xform/^(.)([zbehknqux])(.*)$/$1$2$3B/
+    -  xform/^(.)([cfilorvy])(.*)$/$1$2$3C/
+
+    - xform/^(.{4})AA$/$1A/
+    - xform/^(.{4})AB$/$1B/
+    - xform/^(.{4})AC$/$1C/
+    - xform/^(.{4})BA$/$1D/
+    - xform/^(.{4})BB$/$1E/
+    - xform/^(.{4})BC$/$1F/
+    - xform/^(.{4})CA$/$1G/
+    - xform/^(.{4})CB$/$1H/
+    - xform/^(.{4})CC$/$1I/
+
+    - xform/^[a-z]+//
+    - xlit/ABCDEFGHI/123456789/
 
   engine/filters:
     ## - simplifier # 简体词库, 不需要这个.
@@ -44,8 +84,6 @@ __patch:
   - flypy_simp.schema.yaml:/config_base
   - flypy_simp.schema.yaml:/config_keybinding
   - config_patch
-  - speller/algebra/+:
-      __include: t9.keymap.yaml:/data
 
   # - speller/algebra/+:
     # - abbrev/^(..).+$/$1/  # 允许2键匹配完整音节 (例如组词的时候).
