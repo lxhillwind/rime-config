@@ -176,7 +176,11 @@ function AuxFilter.func(input, env)
                 else
                     check = false
                     local reOrder = false
-                    if cand.start == 0 and cand._end == #inputCode and utf8.len(cand.text) == 2 then
+                    if (
+                        cand.start == 0 and cand._end == #inputCode and utf8.len(cand.text) == 2
+                        -- 仅当选中过该词语后, 才将其挪到首选.
+                        and cand.type == 'user_phrase'
+                    ) then
                         reOrder = true
                     end
                     if reOrder then yield(cand) end
