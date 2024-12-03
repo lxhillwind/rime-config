@@ -9,6 +9,8 @@
 # 这几个文件是基本字库 / 词库, 因此要保留在本地.
 !cn_dicts/*_xhup.dict.yaml
 !cn_dicts/base.dict.yaml
+# 方案不需要, 但是生成程序需要.
+!cn_dicts/8105.dict.yaml
 
 # 避免打包本地配置.
 /flypy_simp.custom.yaml
