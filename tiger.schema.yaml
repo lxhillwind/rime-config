@@ -63,6 +63,7 @@ config_flypy_lookup:
   reverse_lookup:
     dictionary: _he_single
     enable_user_dict: false
+    enable_completion: true
     prefix: "#"
     suffix: "'"
     tips: "〔鹤形〕"

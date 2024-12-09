@@ -160,7 +160,7 @@ config_tiger_lookup:
   tiger_lookup:
     tag: tiger_lookup
     dictionary: tiger
-    enable_completion: false
+    enable_completion: true  # 反查码进行补全提示
     enable_sentence: false  # 禁止造词
     enable_user_dict: false
     prefix: "#"
