@@ -1,7 +1,6 @@
 patch:
   schema_list:
     - schema: flypy_simp
-    - schema: tiger
     - schema: quanpin
     - schema: t9
 

@@ -132,40 +132,40 @@ config_lua_filter:
   aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
   #aux_code/filter: false  # 取消注释来禁用辅助码筛词
 
-config_tiger_lookup:
-  schema/dependencies/@next: tiger
+config_shanren_lookup:
+  schema/dependencies/@next: _shanren
 
   engine/segmentors:
     - ascii_segmentor
     - matcher
-    - affix_segmentor@tiger_lookup
+    - affix_segmentor@shanren_lookup
     - abc_segmentor
     - punct_segmentor
     - fallback_segmentor
 
-  engine/translators/@next: table_translator@tiger_lookup
+  engine/translators/@next: table_translator@shanren_lookup
 
-  engine/filters/@next: reverse_lookup_filter@tiger_reverse_lookup
+  engine/filters/@next: reverse_lookup_filter@shanren_reverse_lookup
 
-  recognizer/patterns/tiger_lookup: "^#[a-z]*'?$"
+  recognizer/patterns/shanren_lookup: "^#[a-z]*'?$"
 
-  tiger_reverse_lookup:
-    tags: [ tiger_lookup ]
+  shanren_reverse_lookup:
+    tags: [ shanren_lookup ]
     dictionary: _he_single
     overwrite_comment: true
     comment_format:
       - erase/^o[a-z]{4}.*/
       - xform/^(..).*/$1/
 
-  tiger_lookup:
-    tag: tiger_lookup
-    dictionary: tiger
+  shanren_lookup:
+    tag: shanren_lookup
+    dictionary: ShanRenMaLTS.words
     enable_completion: true  # 反查码进行补全提示
     enable_sentence: false  # 禁止造词
     enable_user_dict: false
     prefix: "#"
     suffix: "'"
-    tips: "〔虎码〕"
+    tips: "〔山人〕"
     # comment_format:
     #   - xform/_.*//
 
@@ -175,7 +175,7 @@ __patch:
   - config_flypy
   - config_lua_translator
   - config_lua_filter
-  - config_tiger_lookup
+  - config_shanren_lookup
   - flypy_simp.custom.yaml:/patch?
 
 # 覆盖示例 (在 flypy_simp.custom.yaml 中):

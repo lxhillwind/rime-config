@@ -1,0 +1,16 @@
+schema:
+  name: "山人码"
+  description: |
+    这个方案是用来作为 flypy_simp 方案的依赖, 并生成固态词典的.
+  schema_id: _shanren
+  version: '2024-12-10'
+
+engine:
+  translators:
+    - table_translator
+
+translator:
+  dictionary: ShanRenMaLTS.words
+  enable_completion: false  # 补全
+  enable_sentence: false  # 禁止造词
+  enable_user_dict: false  # 禁止记录造词

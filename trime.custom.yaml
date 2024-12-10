@@ -1,7 +1,6 @@
 # trime.custom.yaml
 patch:
   preset_keyboards/flypy_simp/import_preset: qwerty
-  preset_keyboards/tiger/import_preset: qwerty
   preset_keyboards/quanpin/import_preset: qwerty
 
   preset_keys/Keyboard_eng: {label: En, send: Eisu_toggle, select: eng}

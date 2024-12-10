@@ -66,13 +66,13 @@
 
 全拼.
 
-### [tiger.schema.yaml](tiger.schema.yaml)
+### [_shanren.schema.yaml](_shanren.schema.yaml)
 
-虎码.
+山人码LTS 作为反查码.
 
-### _he_single_8105.schema.yaml / _tiger_8105.schema.yaml
+### _he_single_8105.schema.yaml
 
-鹤形 / 虎码的 8105 子集的方案文件.
+鹤形的 8105 子集的方案文件.
 
 ## 本仓库未包含的文件
 
@@ -160,13 +160,13 @@ sort: by_weight
 # :exe 'normal jdG' | r !python3 ./convert-to-xhup.py < 8105.dict.yaml
 ```
 
-### tiger.dict.yaml
+### ShanRenMaLTS.words.dict.yaml
 
-虎码的码表
+山人码LTS 的码表
 
-### _he_single_8105.dict.yaml / _tiger_8105.dict.yaml
+### _he_single_8105.dict.yaml
 
-鹤形 / 虎码的 8105 子集
+鹤形的 8105 子集
 
 ## 致谢
 
