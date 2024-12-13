@@ -66,6 +66,12 @@ config_keybinding:
     - { when: has_menu, accept: \, send: Shift+Delete }  # 方便在手机上输入
 
 config_flypy:
+  schema/dependencies/+:
+    - _he_single_8105
+
+  fixed:
+    __include: _he_single_8105.schema.yaml:/translator
+
   # 使用单字的音形码 + 别人维护的简体词库 (包含注音);
   # *缺点*: 无法使用下方的 "朴素的直接辅助码"; 除非是自造词 (会包含完整音形码).
   # 相比使用简化字八股文作为词库的优势: 多音字词语不再有问题.
@@ -83,6 +89,7 @@ config_flypy:
 
   engine/translators:
     - punct_translator
+    - table_translator@fixed
     - script_translator
 
   engine/filters:
@@ -96,27 +103,6 @@ config_flypy:
     - { when: has_menu, accept: Tab, send_sequence: '{Shift+Right}_' }
     # /: 方便在手机上输入
     - { when: has_menu, accept: /, send_sequence: '{Shift+Right}_' }
-
-config_lua_translator:
-  switches/+:
-    # 通过 top_translator 来选择使用哪个字典.
-    - name: extended_charset
-      states: [ 基本, 扩充 ]
-
-  schema/dependencies/+:
-    - _he_single_8105
-    - _he_single
-
-  fixed_8105: # used in top_translator
-    __include: _he_single_8105.schema.yaml:/translator
-  fixed_full: # used in top_translator
-    __include: _he_single.schema.yaml:/translator
-
-  engine/translators:
-    - punct_translator
-    # 在 top_translator 中选择使用哪个 table_translator.
-    - lua_translator@*top_translator@extended_charset
-    - script_translator
 
 config_lua_filter:
   speller/algebra:  # 复制粘贴自 config_flypy 中的 speller/algebra; 注释了一个.
@@ -136,6 +122,7 @@ config_shanren_lookup:
   schema/dependencies/+:
     - _shanren
     - _he_single
+    - _pinyin_data
 
   engine/segmentors:
     - ascii_segmentor
@@ -159,27 +146,21 @@ config_shanren_lookup:
 
   shanren_reverse_lookup:
     tags: [ shanren_lookup ]
-    dictionary: _he_single
-    overwrite_comment: true
-    comment_format:
-      - erase/^o[a-z]{4}.*/
-      - xform/^(..).*/$1/
+    dictionary: _pinyin_data
 
   flypy_shanren_reverse_lookup:
     tags: [ flypy_shanren_lookup ]
-    dictionary: ShanRenMaLTS.words
+    dictionary: _shanren
 
   shanren_lookup:
     tag: shanren_lookup
-    dictionary: ShanRenMaLTS.words
+    dictionary: _shanren
     enable_completion: true  # 反查码进行补全提示
     enable_sentence: false  # 禁止造词
     enable_user_dict: false
     prefix: "#"
     suffix: "'"
-    tips: "〔山人>小鹤〕"
-    # comment_format:
-    #   - xform/_.*//
+    tips: "〔山人>拼音〕"
 
   flypy_shanren_lookup:
     tag: flypy_shanren_lookup
@@ -195,7 +176,6 @@ __patch:
   - config_base
   - config_keybinding
   - config_flypy
-  - config_lua_translator
   - config_lua_filter
   - config_shanren_lookup
   - flypy_simp.custom.yaml:/patch?

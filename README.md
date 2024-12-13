@@ -70,9 +70,17 @@
 
 山人码LTS 作为反查码.
 
+### [gen-shorter-shanren.py](gen-shorter-shanren.py)
+
+用于根据山人码生成更短的编码 (填充空洞).
+
 ### _he_single_8105.schema.yaml
 
 鹤形的 8105 子集的方案文件.
+
+### _pinyin_data.schema.yaml
+
+声调数据的方案文件.
 
 ## 本仓库未包含的文件
 
@@ -160,6 +168,30 @@ sort: by_weight
 # :exe 'normal jdG' | r !python3 ./convert-to-xhup.py < 8105.dict.yaml
 ```
 
+### _shanren.dict.yaml
+
+- 在 [flypy_simp.dict.yaml](flypy_simp.dict.yaml) 中引用;
+- 这个文件的文件头如下:
+
+```yaml
+# 山人码LTS单字码表+缩减编码
+# encoding: utf-8
+---
+name: _shanren
+version: "2024-12-13"
+sort: by_weight
+use_preset_vocabulary: false
+columns:
+  - text #字词
+  - code #编码
+  - weight #权重
+import_tables:
+  - ShanRenMaLTS.words
+...
+
+# :exec 'normal jdG' | r !python3 ./gen-shorter-shanren.py
+```
+
 ### ShanRenMaLTS.words.dict.yaml
 
 山人码LTS 的码表
@@ -167,6 +199,10 @@ sort: by_weight
 ### _he_single_8105.dict.yaml
 
 鹤形的 8105 子集
+
+### _pinyin_data.dict.yaml
+
+声调数据; 根据 <https://github.com/mozillazg/pinyin-data> 的 pinyin.txt 整理为 rime dict 格式, 用作反查显示声调.
 
 ## 致谢
 
