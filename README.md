@@ -58,13 +58,13 @@
 
 用于从较大的 lua/flypy.ini 文件中提取出 8105 常用字的脚本.
 
-### [gen-8105-table.py](gen-8105-table.py)
-
-用于从较大的 rime 格式码表文件中提取出 8105 常用字的脚本.
-
 ### [quanpin.schema.yaml](quanpin.schema.yaml)
 
 全拼.
+
+### [t9.schema.yaml](t9.schema.yaml)
+
+九宫格双拼.
 
 ### [_shanren.schema.yaml](_shanren.schema.yaml)
 
@@ -128,16 +128,16 @@ sort: by_weight
 ...
 
 
-# exe 'normal 4jdG' | r ./delimiter.ini | exe 'r ./lua/flypy.ini'
+# exe 'normal 4jdG' | r ./lua/delimiter.ini | exe 'r ./lua/flypy.ini'
 # :+3,$v/\v^[a-z]/d
 # :+2,$s/,/=/
 # :+1,$!awk -F= '{ OFS="\t"; print($3, $1, 100 - $2) }'
 ```
 
-### delimiter.ini
+### lua/delimiter.ini
 - 一简码和二简码的分隔符;
 - 用来区分固定字和 script_translator 的单字;
-- 例如, a => `啊 按 |`, aa => `啊 阿 |`; delimiter.ini 就是包含 `|` 的:
+- 例如, a => `啊 按 |`, aa => `啊 阿 |`; lua/delimiter.ini 就是包含 `|` 的:
 
 ```dosini
 # 其他行省略
@@ -166,26 +166,6 @@ sort: by_weight
 
 # how to update:
 # :exe 'normal jdG' | r !python3 ./convert-to-xhup.py < 8105.dict.yaml
-```
-
-### cn_dicts/flypy_ext.dict.yaml
-
-- 在 [flypy_simp.dict.yaml](flypy_simp.dict.yaml) 中引用;
-- 这个文件的文件头如下:
-
-```yaml
-# Rime dictionary
-# encoding: utf-8
-#
-# 鹤形单字编码 (xx_yy), 对 8105 的补充
----
-name: flypy_ext
-version: "2024-12-14"
-sort: by_weight
-...
-
-# how to update:
-# :exe 'normal jdG' | r !python3 ./gen-compliments.py
 ```
 
 ### _shanren.dict.yaml
