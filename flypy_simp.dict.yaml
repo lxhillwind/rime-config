@@ -19,4 +19,5 @@ import_tables:
   - cn_dicts/8105_xhup # 常用单字码表
   - cn_dicts/fix_lo
   - cn_dicts/base # 基本词库
-  - cn_dicts/flypy_ext # 扩充单字码表
+  # 会造成手机上使用卡顿, 因此暂时禁用.
+  # - cn_dicts/flypy_ext # 扩充单字码表
