@@ -168,6 +168,26 @@ sort: by_weight
 # :exe 'normal jdG' | r !python3 ./convert-to-xhup.py < 8105.dict.yaml
 ```
 
+### cn_dicts/flypy_ext.dict.yaml
+
+- 在 [flypy_simp.dict.yaml](flypy_simp.dict.yaml) 中引用;
+- 这个文件的文件头如下:
+
+```yaml
+# Rime dictionary
+# encoding: utf-8
+#
+# 鹤形单字编码 (xx_yy), 对 8105 的补充
+---
+name: flypy_ext
+version: "2024-12-14"
+sort: by_weight
+...
+
+# how to update:
+# :exe 'normal jdG' | r !python3 ./gen-compliments.py
+```
+
 ### _shanren.dict.yaml
 
 - 在 [flypy_simp.dict.yaml](flypy_simp.dict.yaml) 中引用;
