@@ -15,9 +15,10 @@ end
 
 function top.func(input, seg, env)
     local context = env.engine.context
-    if (env.engine.context.input == input) then
-        local fixed_res = fixed:query(input, seg)
-        for cand in fixed_res:iter() do
+    local inputCode = context.input
+    if (inputCode == input) then
+        local res = fixed:query(input, seg)
+        for cand in res:iter() do
             yield(cand)
         end
     end

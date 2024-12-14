@@ -70,6 +70,7 @@ config_flypy:
     - _he_single_8105
 
   fixed:
+    # used in top_translator
     __include: _he_single_8105.schema.yaml:/translator
 
   # 使用单字的音形码 + 别人维护的简体词库 (包含注音);
@@ -84,12 +85,12 @@ config_flypy:
     - xform/^olo$/lo_k/  # 处理 cn_dicts/fix_lo.dict.yaml 对应读音; 它是为全拼准备的.
     - derive/^(..).*$/$1/  # 将包含辅助码的音节降级为双拼.
     # 这个与下方 lua_filter@*aux_code 是互斥的: 只能启用一个.
-    - derive/^(..)_(.*)$/$1$2/  # 免输入引导字符直接使用辅助码 (单字; 没有词语中筛字的功能)
+    # - derive/^(..)_(.*)$/$1$2/  # 免输入引导字符直接使用辅助码 (单字; 没有词语中筛字的功能)
     - abbrev/^(.).*$/$1/  # 超级简拼
 
   engine/translators:
     - punct_translator
-    - table_translator@fixed
+    - lua_translator@*top_translator
     - script_translator
 
   engine/filters:
@@ -105,11 +106,6 @@ config_flypy:
     - { when: has_menu, accept: /, send_sequence: '{Shift+Right}_' }
 
 config_lua_filter:
-  speller/algebra:  # 复制粘贴自 config_flypy 中的 speller/algebra; 注释了一个.
-    - xform/^olo$/lo_k/
-    - derive/^(..).*$/$1/
-    # - derive/^(..)_(.*)$/$1$2/
-    - abbrev/^(.).*$/$1/
   engine/filters/@before 0: lua_filter@*aux_code
 
   ## lua_filter: aux_code 的配置
