@@ -165,6 +165,34 @@ function AuxFilter.func(input, env)
         return
     end
 
+    -- 调整长度为3的候选次序; 三字词先于二字词.
+    if #inputCode == 3 then
+        local cand_pre = {}
+        -- 随便选了一个数, 用于控制迭代的数量.
+        local counter = 100
+        for cand in input:iter() do
+            if cand.start == 0 and cand._end == #inputCode and utf8.len(cand.text) == 1 then
+                yield(cand)
+            else
+                counter = counter - 1
+                if counter > 0 then
+                    if utf8.len(cand.text) == 3 then
+                        yield(cand)
+                    else
+                        table.insert(cand_pre, cand)
+                    end
+                else
+                    if counter == 0 then
+                        for _, i in ipairs(cand_pre) do
+                            yield(i)
+                        end
+                    end
+                    yield(cand)
+                end
+            end
+        end
+    end
+
     -- 调整长度为4的候选次序; 词组优先. (仅当未使用 "自定义短语" 时)
     if not AuxFilter.opt.phrase and #inputCode == 4 then
         local candSingle = {}
