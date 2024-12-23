@@ -98,6 +98,8 @@ config_flypy:
     - uniquifier
 
   key_binder/bindings/+:
+    - { when: has_menu, accept: Control+f, send_sequence: '{Shift+Right}' }
+    - { when: has_menu, accept: Control+b, send_sequence: '{Shift+Left}' }
     # Tab 来进入输入辅助码的流程;
     # (Shift+Right 定位, _ 引导辅助码; 字表中使用 _ 作为音形码的分隔符).
     # 直接使用 Right 键的话, 可能在 linear layout 中不生效.
