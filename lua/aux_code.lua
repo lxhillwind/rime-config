@@ -76,35 +76,12 @@ end
 function AuxFilter.func(input, env)
     local context = env.engine.context
     local inputCode = context.input
-    local phraseMap = nil
 
-    -- 处理 "自定义短语"
-    if AuxFilter.opt.phrase then
-        phraseMap = AuxFilter.code_map[inputCode]
-    end
-    if phraseMap then
-        local keys = {}
-        for i in pairs(phraseMap) do
-            table.insert(keys, i)
-        end
-        table.sort(keys)
-
-        local counter = 0
+    -- 反查时, 不处理, 直接返回.
+    -- NOTE 方案文件中的反查配置需要与此处的判断逻辑保持同步.
+    if inputCode:find('#', 1, true) then
         for cand in input:iter() do
-            counter = counter + 1
-            while phraseMap[counter] do
-                yield(Candidate('user_phrase', 0, #inputCode, phraseMap[counter], ''))
-                table.remove(keys, 1)
-                counter = counter + 1
-            end
             yield(cand)
-        end
-        -- 如果输入法产生的候选词不够, 就会产生空洞;
-        -- 直接将剩下的自定义短语按照顺序生成 Candidate.
-        if #keys > 0 then
-            for _, i in ipairs(keys) do  -- 使用 ipairs, 确保顺序.
-                yield(Candidate('user_phrase', 0, #inputCode, phraseMap[i], ''))
-            end
         end
 
         return
@@ -160,6 +137,40 @@ function AuxFilter.func(input, env)
                 yield(i)
             end
             insertAfter = {}
+        end
+
+        return
+    end
+
+    local phraseMap = nil
+
+    -- 处理 "自定义短语"
+    if AuxFilter.opt.phrase then
+        phraseMap = AuxFilter.code_map[inputCode]
+    end
+    if phraseMap then
+        local keys = {}
+        for i in pairs(phraseMap) do
+            table.insert(keys, i)
+        end
+        table.sort(keys)
+
+        local counter = 0
+        for cand in input:iter() do
+            counter = counter + 1
+            while phraseMap[counter] do
+                yield(Candidate('user_phrase', 0, #inputCode, phraseMap[counter], ''))
+                table.remove(keys, 1)
+                counter = counter + 1
+            end
+            yield(cand)
+        end
+        -- 如果输入法产生的候选词不够, 就会产生空洞;
+        -- 直接将剩下的自定义短语按照顺序生成 Candidate.
+        if #keys > 0 then
+            for _, i in ipairs(keys) do  -- 使用 ipairs, 确保顺序.
+                yield(Candidate('user_phrase', 0, #inputCode, phraseMap[i], ''))
+            end
         end
 
         return
