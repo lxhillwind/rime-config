@@ -186,11 +186,19 @@ function AuxFilter.func(input, env)
                         for _, i in ipairs(cand_pre) do
                             yield(i)
                         end
+                        cand_pre = {}
                     end
                     yield(cand)
                 end
             end
         end
+        if #cand_pre > 0 then
+            for _, i in ipairs(cand_pre) do
+                yield(i)
+            end
+        end
+
+        return
     end
 
     -- 调整长度为4的候选次序; 词组优先. (仅当未使用 "自定义短语" 时)
