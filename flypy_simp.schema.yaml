@@ -112,7 +112,7 @@ config_lua_filter:
 
   ## lua_filter: aux_code 的配置
   #aux_code/file: flypy.ini  # 这个文件太大了, 可能在 Windows 上读取比较慢.
-  aux_code/file: aux-chars-234.ini
+  aux_code/file: aux-chars-8105.ini
   aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
   #aux_code/filter: false  # 取消注释来禁用辅助码筛词
 

@@ -37,7 +37,7 @@
 
   ## lua_filter: aux_code 的配置
   #aux_code/file: flypy.ini  # 这个文件太大了, 可能在 Windows 上读取比较慢.
-  aux_code/file: aux-chars-234.ini
+  aux_code/file: aux-chars-8105.ini
   aux_code/phrase: false  # 取消注释来禁用自定义短语加入候选
   #aux_code/filter: false  # 取消注释来禁用辅助码筛词
 ```
@@ -101,8 +101,8 @@ aak,2=吖
 aak,3=啊
 ```
 
-### lua/aux-chars-234.ini
-- lua/flypy.ini 的缩减版 (仅包含码长为 2-4 / 且位于 8105 常用字的部分);
+### lua/aux-chars-8105.ini
+- lua/flypy.ini 的缩减版 (仅包含位于 8105 常用字的部分);
 - 在 Windows 平台上可能加载速度提升比较明显.
 
 ```dosini
