@@ -84,13 +84,11 @@ config_flypy:
   speller/algebra:
     - xform/^olo$/lo_k/  # 处理 cn_dicts/fix_lo.dict.yaml 对应读音; 它是为全拼准备的.
     - derive/^(..).*$/$1/  # 将包含辅助码的音节降级为双拼.
-    # 这个与下方 lua_filter@*aux_code 是互斥的: 只能启用一个.
-    # - derive/^(..)_(.*)$/$1$2/  # 免输入引导字符直接使用辅助码 (单字; 没有词语中筛字的功能)
     - abbrev/^(.).*$/$1/  # 超级简拼
 
   engine/translators:
     - punct_translator
-    - lua_translator@*top_translator
+    - table_translator@fixed
     - script_translator
 
   engine/filters:
@@ -108,6 +106,11 @@ config_flypy:
     - { when: has_menu, accept: /, send_sequence: '{Shift+Right}_' }
 
 config_lua_filter:
+  engine/translators:
+    - punct_translator
+    - lua_translator@*top_translator
+    - script_translator
+
   engine/filters/@before 0: lua_filter@*aux_code
 
   ## lua_filter: aux_code 的配置
@@ -174,7 +177,10 @@ __patch:
   - config_base
   - config_keybinding
   - config_flypy
-  - config_lua_filter
+
+  - config_lua_filter  # 如果 lua 不可用, 直接注释此行即可
+  # (丢失筛字功能; 组词时最后一个字如果没用 <Tab> 引导, 就无法记住词语).
+
   - config_shanren_lookup
   - flypy_simp.custom.yaml:/patch?
 
