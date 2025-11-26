@@ -74,11 +74,11 @@
 
 用于根据山人码生成更短的编码 (填充空洞).
 
-### _he_single_8105.schema.yaml
+### [_he_single_8105.schema.yaml](_he_single_8105.schema.yaml)
 
 鹤形的 8105 子集的方案文件.
 
-### _pinyin_data.schema.yaml
+### [_pinyin_data.schema.yaml](_pinyin_data.schema.yaml)
 
 声调数据的方案文件.
 
@@ -149,6 +149,7 @@ aa,3=|
 ### cn_dicts/8105_xhup.dict.yaml
 
 - 在 [flypy_simp.dict.yaml](flypy_simp.dict.yaml) 中引用;
+- 其中包含音形码编码 (以支持输入音形码来造词);
 - 这个文件的文件头如下:
 
 **注意在使用如下 ./cn_dicts/convert-to-xhup.py 进行转换前, 需要使用
@@ -209,3 +210,4 @@ import_tables:
 - <https://github.com/HowcanoeWang/rime-lua-aux-code> RIME输入法辅助码音形分离插件; 本仓库的 lua 代码改动自此.
 - <https://ksqsf.moe/posts/2023-06-01-rime-double-pinyin/> 同时启用 script / table 翻译器并保留造词功能; [lua/top_translator.lua](lua/top_translator.lua) 文件复制自此.
 - <https://github.com/gaboolic/rime-frost> 本仓库使用此处的 cn_dicts 作为字频来源 / 词库.
+- <https://github.com/siuze/ShanRenMaLTS> 使用山人码作为反查.
