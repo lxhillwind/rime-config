@@ -104,15 +104,17 @@ __patch:
   - flypy_simp.schema.yaml:/config_keybinding
   - config_patch
 
-  # - speller/algebra/+:
-    # - abbrev/^(..).+$/$1/  # 允许2键匹配完整音节 (例如组词的时候).
-  ## 但是启用之后, 码长为4时, 词组的优先级会高于单字+辅助码 (甚至无法生成后者).
-
-  - engine/filters/@before 0: lua_filter@*aux_t9
-    aux_code/file: aux-chars-234.ini
+  - engine/filters/@before 0: lua_filter@*t9
+    aux_code/file: aux-chars-8105.ini
 
   - key_binder/bindings/+: # 1-9 won't work now; use left-right key to move selection.
     - { when: has_menu, accept: Left, send: Up }
     - { when: has_menu, accept: Right, send: Down }
 
+  - menu/page_size: 9
+
   - t9.custom.yaml:/patch?
+
+# 在电脑上, 可加入到 t9.custom.yaml:
+# patch:
+#   __include: t9.schema.yaml:/config_numpad

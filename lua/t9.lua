@@ -1,23 +1,13 @@
 -- 改动自 https://github.com/HowcanoeWang/rime-lua-aux-code
 --
 -- ./origin-aux_code 包含了其原本的代码和版权信息.
+local T9 = {}
 
-local AuxT9 = {}
-
--- local log = require 'log'
--- log.outfile = "/tmp/aux_code.log"
-
-function AuxT9.init(env)
-    -- log.info("** AuxCode filter", env.name_space)
+function T9.init(env)
     local config = env.engine.schema.config
-    local opt = {}
-    opt.filter = config:get_bool('aux_code/filter')
-    opt.file = config:get_string('aux_code/file')
-    if opt.filter == nil then opt.filter = true end
-
-    AuxT9.opt = opt
-    AuxT9.aux_code, AuxT9.code_map = AuxT9.readAuxTxt(opt.file)
-    AuxT9.numToAlphabet = {
+    local file = config:get_string('aux_code/file')
+    T9.aux_code, T9.code_map = T9.readAuxTxt(file)
+    T9.numToAlphabet = {
         ['1'] = 'sz',
         ['2'] = 'abc',
         ['3'] = 'def',
@@ -33,7 +23,7 @@ end
 ----------------
 -- 閱讀輔碼文件 --
 ----------------
-function AuxT9.readAuxTxt(txtpath)
+function T9.readAuxTxt(txtpath)
     -- log.info("** AuxCode filter", 'read Aux code txt:', txtpath)
 
     local userPath = rime_api.get_user_data_dir() .. "/lua/"
@@ -50,22 +40,16 @@ function AuxT9.readAuxTxt(txtpath)
         line = line:match("[^\r\n]+") -- 去掉換行符，不然 value 是帶著 \n 的
         local code, seq, ch = line:match("([a-z]+),([0-9]+)=(.+)")
         if code and seq and ch then
-            if AuxT9.opt.filter then
-                if code:len() >= 3 and code:len() <= 4 then
-                    local i = code:sub(3, 3)
-                    if not auxCodes[ch] then
-                        auxCodes[ch] = ''
-                    end
-                    auxCodes[ch] = auxCodes[ch] .. i
+            if code:len() >= 3 and code:len() <= 4 then
+                local i = code:sub(3, 3)
+                if not auxCodes[ch] then
+                    auxCodes[ch] = ''
                 end
+                auxCodes[ch] = auxCodes[ch] .. i
             end
         end
     end
     file:close()
-    -- 確認 code 能打印出來
-    -- for key, value in pairs(AuxT9.aux_code) do
-    --     log.info(key, table.concat(value, ','))
-    -- end
 
     return auxCodes, codeMap
 end
@@ -73,14 +57,52 @@ end
 ------------------
 -- filter 主函數 --
 ------------------
-function AuxT9.func(input, env)
+function T9.func(input, env)
     local context = env.engine.context
     local inputCode = context.input
 
+    local cand_11 = {
+        0, 0, '，', -- 123
+        0, 0, '。', -- 456
+        '？', '、', '！' --789
+    }
+
+    if #inputCode == 3 and inputCode:sub(1, 2) == '11' then
+        local i = cand_11[inputCode:sub(3, 3) + 0]
+        if i ~= 0 then
+            yield(Candidate('user_phrase', 0, #inputCode, i, ''))
+        end
+    end
+
+    -- 将最后2位对应的音节组合放在注释里, 便于用户输入第3位来唯一确认音节.
+    -- 音节信息与方案文件是一致的.
+    if #inputCode % 3 == 2 then
+        local counter = 0
+        while counter < 9 do
+            counter = counter + 1
+            local i = inputCode:sub(#inputCode - 1, #inputCode - 1)
+            local j = inputCode:sub(#inputCode, #inputCode)
+            local i_idx = (counter - 1) // 3 + 1
+            local j_idx = (counter - 1) % 3 + 1
+            local i_items = T9.numToAlphabet[i]
+            local j_items = T9.numToAlphabet[j]
+            local comment = ''
+            if #i_items >= i_idx then
+                comment = comment .. i_items:sub(i_idx, i_idx)
+            end
+            if #j_items >= j_idx then
+                comment = comment .. j_items:sub(j_idx, j_idx)
+            end
+            if #comment ~= 2 then
+                -- inputCode[-2:] is 11
+                comment = cand_11[counter]
+            end
+            yield(Candidate('user_phrase', 0, #inputCode, comment, ''))
+        end
+    end
+
     -- 输入长度为4 / 7时 (对应单字(3+1) 或词组(2*3+1); +辅助码), 进行辅助码筛选.
-    if AuxT9.opt.filter and (
-        (#inputCode == 4 or #inputCode == 7)
-        ) then
+    if (#inputCode == 4 or #inputCode == 7) then
         local insertLater = {}
         local lastChar = inputCode:sub(#inputCode, #inputCode)
         local hasMatched = false
@@ -89,17 +111,17 @@ function AuxT9.func(input, env)
             counter = counter + 1
             local found = false
             local testThis = cand.start == 0 and (
-            -- 最后一位是前边的辅助码, 或者是最后一个字的辅助码 (*不参与组词*);
-            -- 例如, vi'dc'u -> 知道u (x+1=y) / vi'dc'z -> 知道 (x=y);
-            cand._end + 1 == #inputCode
+                -- 最后一位是前边的辅助码, 或者是最后一个字的辅助码 (*不参与组词*);
+                -- 例如, vi'dc'u -> 知道u (x+1=y) / vi'dc'z -> 知道 (x=y);
+                cand._end + 1 == #inputCode
             )
 
             if testThis then
                 for _, codePoint in utf8.codes(cand.text) do
                     if not found then
                         local char = utf8.char(codePoint)
-                        local charAuxCodes = AuxT9.aux_code[char] -- 每個字的輔助碼組
-                        local alphabet = AuxT9.numToAlphabet[lastChar]
+                        local charAuxCodes = T9.aux_code[char] -- 每個字的輔助碼組
+                        local alphabet = T9.numToAlphabet[lastChar]
                         if charAuxCodes and alphabet and charAuxCodes:find('[' .. alphabet .. ']') then -- 輔助碼存在
                             found = true
                             -- log.error(inputCode .. ' => ' .. cand.text)
@@ -128,14 +150,13 @@ function AuxT9.func(input, env)
         return
     end
 
-    -- 所有条件都没有匹配上: 直接 yield.
     for cand in input:iter() do
         yield(cand)
     end
 end
 
-function AuxT9.fini(env)
+function T9.fini(env)
     -- env.notifier:disconnect()
 end
 
-return AuxT9
+return T9
